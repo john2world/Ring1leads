@@ -1,0 +1,60 @@
+{% load i18n %}
+<p>
+Your {% trans 'program' %} <b>{{ program.name }}</b> is complete.
+</p>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th width="20%">Started</th>
+            <td>{{ program.created }}</td>
+        </tr>
+            <th>Ended</th>
+            <td>{{ program_ended }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% with r=program_result %}
+    {% if r.records %}
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                  <th width="20%">Records in this {% trans 'program' %}</th>
+                    <td>{{ r.records }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if r.duplicate_groups or r.duplicate_records or r.normalized_records or r.junk_records %}
+        <table class="table table-bordered">
+            <tbody>
+                {% if r.duplicate_groups %}
+                <tr>
+                    <th width="20%">Duplicate groups</th>
+                    <td>{{ r.duplicate_groups }}</td>
+                </tr>
+                {% endif %}
+                {% if r.duplicate_records %}
+                <tr>
+                    <th width="20%">Duplicate records</th>
+                    <td>{{ r.duplicate_records }}</td>
+                </tr>
+                {% endif %}
+                {% if r.normalized_records %}
+                <tr>
+                    <th width="20%">Records normalized</th>
+                    <td>{{ r.normalized_records }}</td>
+                </tr>
+                {% endif %}
+                {% if r.junk_records %}
+                <tr>
+                    <th width="20%">Junk records deleted</th>
+                    <td>{{ r.junk_records }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endwith %}

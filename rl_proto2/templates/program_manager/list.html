@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block consume-events %}{{ block.super }},program_changed{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "fileupload/jquery.iframe-transport.js" %}"></script>
+    <script src="{% static "fileupload/jquery.fileupload.js" %}"></script>
+{% endblock extra_js %}
+
+{% block layout %}
+
+    <div is="program-list" inline-template>
+
+        <div class="row" v-if="programItems.length > 0">
+            <div class="col-md-8 col-md-offset-1 no-more-tables">
+                <span style="font-size:24px">{% trans 'Program'%} List</span>
+                <hr />
+
+                <div class="row program-list-filters-row">
+                    <div class="col-xs-6">
+                        <input type="text" placeholder="Filter by name" class="program-list-name-filter"
+                               v-model="nameFilter" debounce="500" />
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th width="10%">Actions</th>
+                        <th width="20%">{% trans 'Program' %} Name</th>
+                        <th width="20%">Started</th>
+                        <th width="20%">Completed</th>
+                        <th width="10%">Progress</th>
+                        <th width="10%"align=center>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-link dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="text-primary">
+                                        Status ({$ visibleProgramsCount $}) <i class="fa fa-filter"></i>
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'active'">
+                                            All Active {% trans 'Programs' %}<i v-if="statusFilter == 'active'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'CREA'">
+                                            Created <i v-if="statusFilter == 'CREA'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'RUN'">
+                                            Running <i v-if="statusFilter == 'RUN'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'PAUSE'">
+                                            Paused <i v-if="statusFilter == 'PAUSE'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'COMPL'">
+                                            Completed <i v-if="statusFilter == 'COMPL'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'CANCEL'">
+                                            Cancelled <i v-if="statusFilter == 'CANCEL'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'ACT'">
+                                            Live <i v-if="statusFilter == 'ACT'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" @click="statusFilter = 'ARCH'">
+                                            Archived <i v-if="statusFilter == 'ARCH'" class="fa fa-check"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th width="10%" align=center title="Quality Score">Q. Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through all programs and create rows for each -->
+                        <tr v-show="visibleProgramsCount < 1">
+                            <td colspan=7 align=center>
+                              There are no {% trans 'programs' %} matching your current filter.
+                            </td>
+                        </tr>
+                        <tr v-for="item in programItems" v-show="isVisible(item)">
+                            <td data-title="Actions">
+                                <!-- Actions -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <!-- inherit dropdown menu shared with other templates -->
+                                    {% include 'includes/program_btn_options.html' %}
+                                </div>
+                            </td>
+                            <!-- Program Name -->
+                            <td data-title="{% trans 'Program' %} Name">
+                                <a href="/program/details/{$ item.id $}/">
+                                    {$ item.name $}
+                                </a>
+                            </td>
+                            <!-- Program Create Date -->
+                            <td data-title="Started">
+                                <span v-if="!isEmptyObject(item.latest_report)">
+                                    {$ getFormattedDate(item.latest_report.date_created) $}
+                                </span>
+                                <span v-if="isEmptyObject(item.latest_report)">
+                                    Not started
+                                </span>
+                            </td>
+                            <td data-title="Completed">
+                                <span v-if="!isEmptyObject(item.latest_report)">
+                                    <span v-if="item.latest_report.date_completed">
+                                        {$ getFormattedDate(item.latest_report.date_completed) $}
+                                    </span>
+                                    <span v-if="!item.latest_report.date_completed && item.latest_report.date_completed_estimate">
+                                        {$ getFormattedDate(item.latest_report.date_completed_estimate) $}
+                                    </span>
+                                </span>
+                                <span v-if="item.last_run && isEmptyObject(item.latest_report)">
+                                    Calculating...
+                                </span>
+                                <span v-if="!item.last_run && isEmptyObject(item.latest_report)">
+                                    Not started
+                                </span>
+                            </td>
+
+                            <td data-title="Progress" align="center">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped active"
+                                         v-bind:style="{width: item.progress + '%'}"
+                                         role="progressbar" aria-valuenow="0" arixa-valuemin="0" aria-valuemax="100">
+                                        <span class="program-progress">{$ item.progress $}</span>%
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Program Status displayed in appropriately colored label with optional icon -->
+                            <td data-title="Status" align="center">
+                                <span>
+                                    <i class="fa fa-2x text-{$ getLabelType(item) $} {$ getStatusIcon(item) $}"></i>
+                                </span>
+                            </td>
+
+                            <!-- qscore display -->
+                            <td data-title="Quality Score" align="center">
+                                <span v-if="item.current_quality_score" class="label label-primary">
+                                    <b>{$ item.current_quality_score.score || 0 $}</b>
+                                </span>
+                                <!--<i v-else class="fa fa-2x fa-circle-o-notch text-primary fa-spin"></i>-->
+                            </td>
+                            <!-- / qscore display -->
+                        </tr>
+                    <!-- / loop -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2 well well-lg">
+                <br>
+                {% include 'includes/program_sidebar_right.html' %}
+            </div>
+        </div>
+
+        <div v-if="programItems.length == 0" class="first-program">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-md-12" align="center">
+                  <h5>It looks like you haven't created any {% trans 'programs' %} yet {{ user.first_name }}. Let's fix that!</h5>
+                  <a class="btn btn-lg btn-success"  data-toggle="modal" data-target="#newProgramModal">Create your first {% trans 'program' %}</a>
+                </div>
+            </div>
+        </div>
+    </div><!-- end program-list component -->
+
+    <!-- Program Details Modal -->
+    <div class="modal fade" id="programDetailsModal" tabindex="-1" role="dialog" aria-labelledby="programDetailsModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="programDetailsModalLabel">
+                      {% trans 'Program' %} Details | <span id="program-details-modal-pname"></span>
+                    </h4>
+                </div>
+
+                <div class="modal-body" id="hmtemp"></div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Program Details Modal -->
+
+    <script type="text/x-template" id="program-type-selection">
+        <div>
+            <div class="row" id="new-program-modal-body-row">
+                <div class="col-xs-4" style="height:100%">
+                    <a href="#" data-toggle="tooltip"
+                       title="Analyze and optimize a set of records in a connected database."
+                       id="work-on-db"
+                       data-placement="bottom" class="btn btn-large btn-primary btn-block" @click.stop.prevent="onDbClick">
+                        <i class="fa fa-database fa-5x"></i><br>
+                        <span class="cta-primary-btn-text">Work on My Database</span>
+                    </a>
+                </div>
+
+                <div class="col-xs-4" style="height:100%">
+                    <a href="#"
+                       data-toggle="tooltip"
+                       title="Analyze and optimize a CSV file, then (optionally) import it into your connected database."
+                       data-placement="bottom"
+                       class="btn btn-large btn-primary btn-block" @click.stop.prevent="onListImportClick">
+                        <i class="fa fa-file-excel-o fa-5x"></i><br>
+                        <span class="cta-primary-btn-text">Work on a Spreadsheet</span>
+                    </a>
+                </div>
+
+                <div class="col-xs-4" style="height:100%">
+                    <a href="#"
+                       data-toggle="tooltip"
+                       title="Set up a web form, Marketo webhook, or Salesforce trigger to optimize your data in real-time."
+                       data-placement="bottom"
+                       class="btn btn-large btn-primary btn-block"
+                       disabled>
+                        <i class="fa fa-bolt fa-5x"></i><br>
+                        <span class="cta-primary-btn-text">Integrate Web Forms</span>
+                    </a>
+                </div>
+            </div>
+            <div id="new-program-modal-spinner" style="display: none;">
+                <div class="col-xs-offset-1">
+                    <h2>Downloading database schema...</h2>
+                </div>
+                <div class="col-xs-offset-5">
+                    <i class="fa fa-refresh fa-spin fa-5x"></i>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="list-import-dropzone">
+        <div align="center">
+            <input id="list-import-dropzone-form" name=file type=file data-url="{% url 'import_select' %}?force_json=1" style="display:none">
+            <div id="dropzone" class="well" style="cursor:pointer">
+                <h3>Drag and drop your CSV file to begin the import process <small>or click to select a file</small></h3>
+            </div>
+        </div>
+    </script>
+
+    <!-- create-program-modal component -->
+    <div id="#create-program-modal" is="create-program-modal" inline-template>
+        <div class="modal fade" id="newProgramModal" tabindex="-1" role="dialog" aria-labelledby="newProgramModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="newProgramModalLabel">{$ title $}</h4>
+                    </div>
+
+                    <div class="modal-body" id="new-program-modal-body">
+                        <component :is="currentView" :passed="currentViewProps"></component>
+                    </div>
+
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- create-program-modal component  -->
+{% endblock %}

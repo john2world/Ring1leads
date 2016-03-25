@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <span style="font-size:24px">Reports</span>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            {% if programs %}
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>{% trans 'Programs' %} Name</th>
+                        <th>Report: Quality Score Over Time</th>
+                        <th>Report: Quality Snapshot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for program in programs %}
+                    <tr>
+                        <td>{{ program }}</td>
+                        <td>{% if program.qualityscorereport %}<a href="{% url 'report_qot' program.pk %}">View this report</a>{% else %}-{% endif %}</td>
+                        <td><a href="{% url 'report_snapshot' %}?pk={{ program.pk }}">View this report</a></td>
+                        <tr>
+                            {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <!-- if there are no reports... -->
+            <br>
+            <p align="center" style="font-size:18px">There are no reports to review at this time.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

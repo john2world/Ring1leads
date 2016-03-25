@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load formset_tags %}
+{% load widget_tweaks %}
+
+{% block layout %}
+
+    <form method="POST" action={% url 'select_actions' program.pk %}>
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <h3>Edit Settings</h3>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <h5>General Settings</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8 well settings-container">
+                <!-- nested columns -->
+                <div class="col-md-6">
+                    <div class="checkbox checkbox-space">
+                        {{ settings_form.contacts_normalization.errors }}
+                        <label>
+                            {{ settings_form.contacts_normalization | set_data:'toggle:toggle' }}
+                            <span class="settings-set-label">Normalization</span>
+                            <a href="#" data-toggle="modal" data-target="#contactsNormalizationModal"
+                               class="btn btn-xs"><i class="fa fa-cog fa-2x"></i></a>
+                        </label>
+                    </div>
+
+                    <div class="checkbox checkbox-space">
+                        {{ settings_form.non_field_errors }}
+                        <label>
+                            {{ settings_form.dedupe.errors }}
+                            {{ settings_form.dedupe | set_data:'toggle:toggle' }}
+                            <span class="settings-set-label">Dedupe</span>
+                            <a href="#" data-toggle="modal" data-target="#dedupeModal" class="btn btn-xs"><i class="fa fa-cog fa-2x"></i></a>
+                        </label>
+                    </div>
+
+                    <!--
+                    <div class="checkbox checkbox-space">
+                        {{ settings_form.location_optimization.errors }}
+                        <label>
+                            {{ settings_form.location_optimization | set_data:'toggle:toggle' }}
+                            <span class="settings-set-label">Location Optimization</span>
+                            <a href="#" data-toggle="modal" data-target="#locationOptimizationModal" class="btn btn-xs">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                        </label>
+                    </div>
+                    -->
+
+                    <!-- <div class="checkbox disabled checkbox-space"><label>
+                        <input type="checkbox" disabled data-toggle="toggle">
+                        Smart Fill &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#smartFillModal" class="btn btn-xs">Settings</a>
+                    </label>
+                    </div> -->
+                </div>
+                <div class="col-md-6">
+                    <div class="checkbox checkbox-space">
+                        {{ settings_form.junk_removal.errors }}
+                        <label>
+                            {{ settings_form.junk_removal | set_data:'toggle:toggle' }}
+                            <span class="settings-set-label">
+                                Junk Removal
+                            </span>
+                            <a href="#" data-toggle="modal" data-target="#junkRemovalModal" class="btn btn-xs">
+                                <i class="fa fa-cog fa-2x"></i>
+                            </a>
+                        </label>
+                    </div>
+                </div>
+                <!-- / nested columns -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 program-edit-button-container" align="center">
+                <button type="submit" id="submit-settings" name="continue" class="btn btn-lg btn-success">Continue</button>
+            </div>
+        </div>
+
+
+        <!-- Smart Fill Modal -->
+        <div class="modal fade" id="smartFillModal" tabindex="-1" role="dialog" aria-labelledby="smartFillModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="dedupeModalLabel">Smart Fill Options</h4>
+
+                        <p>When enough training data is present, RingLead can automatically and intelligently fill
+                            picklist and other types of fields in your connected system(s).</p>
+                    </div>
+
+                    <div class="modal-body form-inline">
+                        <!-- begin formset -->
+                        <div class="formset" data-formset-prefix="">
+                            <div data-formset-body align="center">
+                                <div data-formset-form>
+                                    Industry
+                                    <button type="button" class="btn btn-xs" data-formset-delete-button>
+                                        <i class="fa fa-close text-default"></i>
+                                    </button>
+                                </div>
+                                <div data-formset-form>
+                                    Region
+                                    <button type="button" class="btn btn-xs" data-formset-delete-button>
+                                        <i class="fa fa-close text-default"></i>
+                                    </button>
+                                </div>
+                                <br>
+                                <input type="button" value="Add a field" class="btn btn-xs" data-formset-add>
+                            </div>
+                        </div>
+
+                        <!-- end formset -->
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-footer-button" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary modal-footer-button">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Optimization Settings Modal -->
+        <div class="modal fade" id="locationOptimizationModal" tabindex="-1" role="dialog"
+             aria-labelledby="locationOptimizationModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="locationOptimizationModalLabel">Location Optimization Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% for form_field in location_optimization_rule_form %}
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">
+                                    {{ form_field.label }}
+                                </label>
+
+                                <div class="col-sm-6">
+                                    {{ form_field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-footer-button" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary modal-footer-button" data-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Location Optimization Settings Modal -->
+
+
+        <!-- Contacts Normalization Settings Modal -->
+        <div class="modal fade" id="contactsNormalizationModal" tabindex="-1" role="dialog" aria-labelledby="contactsNormalizationModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="contactsNormalizationModalLabel">Contacts Normalization Settings</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        {% for form_field in contacts_normalizer_rule_form %}
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-xs-6 control-label">
+                                        {{ form_field.label }}
+                                    </label>
+
+                                    <div class="col-xs-6">
+                                        {{ form_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-footer-button" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary modal-footer-button" data-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contacts Normalization Settings Modal -->
+
+        <!-- Junk Removal Settings Modal -->
+        <div class="modal fade" id="junkRemovalModal" tabindex="-1" role="dialog" aria-labelledby="junkRemovalModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="junkRemovalModalLabel">Junk Removal Settings</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label class="col-xs-6 control-label">
+                                    {{ junk_removal_settings_form.delete_spam_records.label }}
+                                    <i data-toggle="tooltip"
+                                       title="When this feature is enabled, we will delete SPAM records from your database.
+                                       SPAM is detected via our proprietary database of known SPAM domains, email validation
+                                       partners and through machine learning techniques. If you have backup file generation
+                                       enabled, you can be recover this record from the CSV that we generate."
+                                       data-placement="bottom"
+                                       class="fa fa-question-circle"></i>
+                                </label>
+
+                                <div class="col-xs-6">
+                                    {{ junk_removal_settings_form.delete_spam_records }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Junk Removal Settings Modal -->
+
+        <!-- Dedupe Modal -->
+        <div class="modal fade" id="dedupeModal" tabindex="-1" role="dialog" aria-labelledby="dedupeModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="dedupeModalLabel">Dedupe Options</h4>
+                    </div>
+                    <div class="modal-body form-inline">
+                        <!-- begin formset -->
+                        <h5>Records are duplicates if:</h5>
+
+                        <div class="formset" data-formset-prefix="{{ dupmatchrule_formset.prefix }}">
+                            {{ dupmatchrule_formset.management_form }}
+                            <div data-formset-body>
+                                {% for form in dupmatchrule_formset %}
+                                    <div data-formset-form style="display: -webkit-flex; display: flex">
+                                        <div class="grip"></div>
+                                        {{ form }}
+                                        <button type="button" class="transparent-button" data-formset-delete-button>
+                                            <i class="fa fa-close text-default"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <script type="form-template" data-formset-empty-form>
+                                {% escapescript %}
+                                    <div data-formset-form style="display: -webkit-flex; display: flex">
+                                        <div class="grip"></div>
+                                        {{ dupmatchrule_formset.empty_form }}
+                                        {{ dupmatchrule_formset.empty_form.DELETE }}
+                                        <button type="button" class="transparent-button" data-formset-delete-button>
+                                            <i class="fa fa-close text-default"></i>
+                                        </button>
+                                    </div>
+                                {% endescapescript %}
+                            </script>
+                            <div align="center">
+                                <input type="button" value="Add matching value" class="btn btn-xs" data-formset-add>
+                            </div>
+                        </div>
+                        <!-- end formset -->
+                        <br>
+                        <!-- begin formset -->
+                        <h5>Default Merge Rules <i class="fa fa-question-circle" data-toggle="tooltip"
+                                                   title="Default rules help RingLead determine which record and values
+                                                   should be preserved post-merge."
+                                                   data-placement="right"></i></h5>
+
+                        <div class="formset" data-formset-prefix="{{ survivingrecordrule_formset.prefix }}">
+                            {{ survivingrecordrule_formset.management_form }}
+                            <div data-formset-body>
+                                {% for form in survivingrecordrule_formset %}
+                                    <div data-formset-form style="display: -webkit-flex; display: flex">
+                                        <div class="grip"></div>
+                                        {{ form }}
+                                        <button type="button" class="transparent-button" data-formset-delete-button>
+                                            <i class="fa fa-close text-default"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="defaultsrr" style="display: -webkit-flex; display: flex">
+                            {{ default_surviving_record_rule_form }}
+                            </div>
+                            <script type="form-template" data-formset-empty-form>
+                                <div data-formset-form style="display: -webkit-flex; display: flex">
+                                    <div class="grip"></div>
+                                    {{ survivingrecordrule_formset.empty_form }}
+                                    {{ survivingrecordrule_formset.empty_form.DELETE }}
+                                    <button type="button" class="transparent-button" data-formset-delete-button>
+                                        <i class="fa fa-close text-default"></i>
+                                    </button>
+                                </div>
+                            </script>
+                            <div align="center">
+                                <input type="button" value="Add surviving record rule" class="btn btn-xs"
+                                       data-formset-add>
+                            </div>
+                        </div>
+                        <!-- end formset -->
+                        <br>
+                        <!-- begin formset -->
+                        <h5>Exception Merge Rules <i class="fa fa-question-circle" data-toggle="tooltip"
+                                                     title="An exception rule tells RingLead to ignore the default rules
+                                                     for a specific field when merging a group of duplicates."
+                                                     data-placement="right"></i></h5>
+
+                        <div class="formset" data-formset-prefix="{{ survivingvaluerule_formset.prefix }}">
+                            {{ survivingvaluerule_formset.management_form }}
+                            <div data-formset-body>
+                                {% for form in survivingvaluerule_formset %}
+                                <div data-formset-form style="display: -webkit-flex; display: flex">
+                                        <div class="grip"></div>
+                                        {{ form }}
+                                        <button type="button" class="transparent-button" data-formset-delete-button>
+                                            <i class="fa fa-close text-default"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <script type="form-template" data-formset-empty-form>
+                                <div data-formset-form style="display: -webkit-flex; display: flex">
+                                    <div class="grip"></div>
+                                    {{ survivingvaluerule_formset.empty_form }}
+                                    {{ survivingvaluerule_formset.empty_form.DELETE }}
+                                    <button type="button" class="transparent-button" data-formset-delete-button>
+                                        <i class="fa fa-close text-default"></i>
+                                    </button>
+                                </div>
+                            </script>
+                            <div align="center">
+                                <input type="button" value="Add surviving value rule" class="btn btn-xs"
+                                       data-formset-add>
+                            </div>
+                        </div>
+                        <!-- end formset -->
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-footer-button" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary modal-footer-button">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            {% if open_modal %}
+                $('#dedupeModal').modal('show');
+            {% endif %}
+
+            if (window.location.hash == '#run') {
+              $('#submit-settings').attr('name', 'autorun');
+            }
+
+            enable_selectpickers();
+
+            var type_table = {{ type_table | safe }};
+            var unary_operators = {{ unary_operators | safe }};
+            var picklist_table = {{ picklist_table | safe }};
+
+            filter_operators(type_table, unary_operators);
+
+            function update_formsets_order() {
+                $('[data-formset-body]').each(function () {
+                    var order = 0;
+                    $(this).find('input[name$="ORDER"]').each(function () {
+                        $(this).val(++order);
+                    });
+                });
+            }
+
+            $('.formset').formset({
+                animateForms: true
+            });
+
+            $('[data-formset-add]').click(function () {
+                enable_selectpickers();
+                update_formsets_order();
+                filter_operators(type_table, unary_operators);
+            });
+
+            $('[data-formset-body]').sortable({
+                update: function (event, ui) {
+                    update_formsets_order();
+                },
+                placeholder: 'sortable-placeholder',
+            });
+
+            function reset_priorities(element) {
+                var priority = 0;
+                var lis = $(element).find('li');
+                var length = lis.length;
+                var hierarchy = [];
+                lis.each(function () {
+                  if (priority == 0) {
+                    $(this).find('.hierarchy-arrow-up').css('visibility', 'hidden');
+                  } else {
+                    $(this).find('.hierarchy-arrow-up').css('visibility', 'visible');
+                  }
+                  if (priority == length - 1) {
+                    $(this).find('.hierarchy-arrow-down').css('visibility', 'hidden');
+                  } else {
+                    $(this).find('.hierarchy-arrow-down').css('visibility', 'visible');
+                  }
+                  $(this).attr('data-hierarchy-priority', priority);
+                  priority += 1;
+                  hierarchy.push([$(this).find('span.original-data').first().text(),
+                                  $(this).find('span.original-datab').first().text()]);
+                });
+                var data = JSON.stringify(hierarchy);
+                $(element).closest('*[data-formset-form]').find('.rule-value').val(data);
+            }
+
+            function shift_order(element, direction) {
+              if (direction === undefined) {
+                direction = 1;
+              }
+              var ul = $(element).closest('.picklist-priorities').find('ul').first();
+              var items = ul.children('li');
+              var this_li = $(element).closest('li');
+              var priority = parseInt(this_li.attr('data-hierarchy-priority'));
+              var other_li = ul.find('*[data-hierarchy-priority="' + (priority + direction) + '"]');
+              if (direction == 1) {
+                this_li.before(other_li);
+              } else {
+                this_li.after(other_li);
+              }
+              reset_priorities(ul);
+            }
+
+            $(document).on('click', '.hierarchy-arrow-up', function (event) {
+              event.stopPropagation();
+              shift_order(this, -1);
+            });
+
+            $(document).on('click', '.hierarchy-arrow-down', function (event) {
+              event.stopPropagation();
+              shift_order(this, 1);
+            });
+
+            $(document).on('change', '.picklist-priorities', function (event) {
+              $('.picklist-priorities span.filter-option').html('Priorities');
+            }).change();
+
+            $(document).on('change', '.rule-operator', function () {
+                var value_input = $(this).next('.rule-value');
+                var container = $(this).closest('div');
+                var priorities = $(container).find('.picklist-priorities');
+                var field_pk = $(container).find('.selectpicker').first().val();
+                if ($(this).val() == 'PICKLIST_HIERARCHY') {
+                  priorities.attr('style', '');
+                  priorities.show();
+                  priorities.find('option').remove();
+                  var data = picklist_table[field_pk];
+                  try {
+                    data = JSON.parse($(value_input).val());
+                  } catch(e) {
+                    data = picklist_table[field_pk];
+                  }
+                  $.each(data, function(key, value) {
+                    // FIXME: XSS?
+                    var data_content = '' +
+                        '<span class="original-data" style="display: none;">' + value[0] + '</span>' +
+                        '<span class="original-datab" style="display: none;">' + value[1] + '</span>' +
+                        '<i style="text-align: right;" class="hierarchy-arrow-up fa fa-arrow-up"></i>' +
+                        '&nbsp;' +
+                        '<i style="text-align: right;" class="hierarchy-arrow-down fa fa-arrow-down"></i>' +
+                        '&nbsp;&nbsp;&nbsp;' +
+                        value[1];
+                    $(priorities).append('<option data-content=\'' + data_content + '\' value="' + value[0] + '">' + value[1] + '</option>');
+                  });
+                  $(priorities).selectpicker('refresh');
+                  $(priorities).change();
+                  reset_priorities(priorities);
+                  $(priorities).find('option').hide();
+                } else {
+                  priorities.attr('style', 'display: none !important;');
+                }
+            });
+            $('.rule-operator').change();
+
+            /* picklist prioritization */
+            //$('.picklist-priorities').hide();
+
+        });
+    </script>
+{% endblock %}

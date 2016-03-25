@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+    {% block report_header %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1" align="center">
+          <h3>{{ program.name }}: Quality Score Snapshot</h3>
+        </div>
+        <div class="col-md-2" align="center">
+            <a href="{% url 'reports' %}" class="btn btn-default btn-sm">Back to Reports</a>
+        </div>
+    </div>
+    <hr>
+    {% endblock report_header %}
+    <div class="row" id="qs-id" data-qs-id="{{ qscore.id }}">
+      <div class="col-md-8 col-md-offset-2" align="center">
+        <!-- Q Score boxes -->
+        <div class="row">
+
+                <div class="col-md-6 well">
+                  <h5>Current Quality Score</h5>
+                  <!-- Gauge via JustGage -->
+                  <div id="gauge_{{ object.id }}"></div>
+                  <!-- End Gauge -->
+                  <p align="left">
+                      The current score for <b>{{ object.name }}</b> is <b><span class="qs-score">{{ qscore.score }}</span></b> out of 100.
+                      A variety of factors went into calculating this score such as validity of phone, email and location information, completeness of information, age of information and more.
+                  </p>
+                </div>
+                <div class="col-md-6" style="padding-left:80px">
+                    <br>
+                    <h5>Contributing Factors</h5>
+                    <div align="left">Below are some metrics that factor into the quality score calculation.</div>
+                    <div align="left" style="font-size:18px">
+                        {% if qscore.percent_complete %}
+                            <div class="qs-container-percent_complete">
+                                <i style="margin-right: 10px" class="fa fa-pie-chart text-primary"></i>
+                                <b class="qs-percent_complete">{{ qscore.percent_complete|default:'' }}</b>% record completeness
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.percent_valid_location %}
+                            <div class="qs-container-percent_valid_location">
+                                <i style="margin-right: 18px" class="fa fa-map-marker text-success"></i>
+                                <b class="qs-percent_valid_location">{{ qscore.percent_valid_location|default:'' }}</b>% valid location info
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.percent_valid_phone %}
+                            <div class="qs-container-percent_valid_phone">
+                                <i style="margin-right: 18px" class="fa fa-phone text-success"></i>
+                                <b class="qs-percent_valid_phone">{{ qscore.percent_valid_phone|default:'' }}</b>% valid phone info
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.percent_valid_email %}
+                            <div class="qs-container-percent_valid_email">
+                                <i style="margin-right: 15px" class="fa fa-envelope text-success"></i>
+                                <b class="qs-percent_valid_email">{{ qscore.percent_valid_email|default:'' }}</b>% valid email addresses
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.percent_spam_email %}
+                            <div class="qs-container-percent_spam_email">
+                                <i style="margin-right: 18px" class="fa fa-ban text-danger"></i>
+                                <b class="qs-percent_spam_email">{{ qscore.percent_spam_email|default:'' }}</b>% spam records
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.avg_age %}
+                            <div class="qs-container-avg_age">
+                                <i style="margin-right: 10px" class="fa fa-calendar text-warning"></i> Avg. age of a record:
+                                <b class="qs-avg_age">{{ qscore.avg_age|default:'' }} </b> days
+                                <br>
+                            </div>
+                        {% endif %}
+
+                        {% if qscore.avg_since_last_modified %}
+                            <div class="qs-container-avg_since_last_modified">
+                                <i style="margin-right: 10px" class="fa fa-hand-pointer-o text-primary"></i> Time since last touch:
+                                <b class="qs-avg_since_last_modified">{{ qscore.avg_since_last_modified|default:'' }} </b> days
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        <!-- / Q Score boxes -->
+
+      </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var g = new JustGage({
+                id: "gauge_" + {{ object.id }},
+                value: {{ qscore.score }},
+                min: 0,
+                max: 100,
+                levelColors: ["#FF3300", "#FF9900", "#FFFF00", "#33CC33"]
+            });
+        });
+    </script>
+{% endblock %}

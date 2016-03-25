@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% load i18n static widget_tweaks date_utils %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/flatness/jquery-ui.css' %}">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/jquery.timepicker.css' %}" rel="stylesheet" type="text/css">
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script src="{% static 'js/tag-it.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/jquery.timepicker.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'js/Chart.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock extra_js %}
+
+{% block layout %}
+    <div class="fade" id="program-pk-holder" data-pk="{{ program.pk }}"></div>
+    <div is="program-details" inline-template id="program-details">
+
+        <div id="default-settings" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Optimize now</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p style="text-align: center;">You are about to optimize this data</p>
+
+                        <div class="center-block" style="width: 374px;">
+                            <button type="button" class="btn btn-primary"
+                                    style="width: 180px; white-space: normal; margin-right: 10px;"
+                                    @click="editSettings(true)">
+                                Use Custom Optimization Settings
+                            </button>
+                            <button type="button" class="btn btn-success" style="width: 180px; white-space: normal;"
+                                    data-dismiss="modal"
+                                    @click="_processProgramAction('/program/' + getProgramPk() + '/optimize/')">
+                                Use Default Optimization Settings
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default center-block" style="width: 30%"
+                                data-dismiss="modal">Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="program-schedule" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">{% trans 'Program schedule' %} schedule</h4>
+                    </div>
+                    <div class="modal-body">
+                      <form id="schedule-form">
+                        <div style="display: inline; margin-right: 20px;">{{ form_program_schedule.schedule_enabled | set_data:'toggle:toggle' }}</div>
+                        Run every {{ form_program_schedule.schedule_day|attr:"style:width: 20%" }} at {{ form_program_schedule.schedule_hour }}.
+                        <br>
+                        <br>
+                        <button @click="setSchedule" data-dismiss="modal" style="width: 100%" class="btn btn-success">Save</button>
+                      </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+              <div class="col-xs-4"><h4>{% trans 'Program' %} Details</h4></div>
+                <div class="col-xs-8">
+                    <label class="col-xs-2 control-label view-switch-label">
+                        View:
+                    </label>
+
+                    <div class="col-xs-10">
+                        <select v-model="selectedReportType" class="form-control" @change="_onReportChange">
+                            <option value="snapshot" selected>Quality Score Snapshot</option>
+                            <option value="scoreOverTime">Quality Score Over Time</option>
+                            <option value="history">{% trans 'Program' %} History</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0">
+                <div class="col-xs-4">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="panel panel-default program-details-panel">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Details</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="program-details-list">
+                                        <li>
+                                            <b>Name:</b>
+                                            <span v-show="!editNameMode">
+                                                {$ program.name $}
+                                                <i class="fa fa-pencil-square-o action-icon" @click="editNameMode=true"
+                                                   data-toggle="tooltip" title="Edit"></i>
+                                            </span>
+                                            <span v-show="editNameMode">
+                                                <input id="program-name-input" type="text" v-model="program.name" />
+                                                <i class="fa fa-check action-icon" @click="renameProgram"
+                                                   data-toggle="tooltip" title="Save"></i>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <b>Status:</b> {$ program.status $}
+                                        </li>
+                                        <li v-if="program.current_activity_description">
+                                            <b>Activity:</b> {$ program.current_activity_description $}
+                                        </li>
+                                        <li v-if="program.last_run">
+                                            <b>Last run:</b> {$ lastRun $}
+                                        </li>
+                                    </ul>
+                                    <hr/>
+                                    <div class="data-origin-form">
+                                      <strong>Source:</strong> {{ form_data_origin.data_origin | attr:"@change:setDataOrigin" }}
+                                    </div>
+                                    <hr/>
+                                    <input id="program-tags" value="{$ program.tags $}" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Actions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <a class="btn btn-lg btn-default btn-block btn-dv" href="{$ program.pre_backup_url $}"
+                                       v-if="program.pre_backup_url">
+                                        Download Original Data
+                                    </a>
+                                    <a class="btn btn-lg btn-default btn-block btn-dv" href="{$ program.post_run_url $}"
+                                       v-if="program.post_run_url && program.status != 'RUN' && program.status != 'PAUSE'">
+                                        Download Optimized Data
+                                    </a>
+                                    <a class="btn btn-lg btn-default btn-block btn-dv" href="{% url 'batch_select' %}?pk={{ program.pk }}"
+                                       v-if="program.source_name != 'FileSource' && program.status != 'RUN' && program.status != 'PAUSE'">
+                                        Edit Filters
+                                    </a>
+                                    <button @click="editSettings(false)" class="btn btn-lg btn-default btn-block btn-dv"
+                                       v-if="program.source_name != 'FileSource' && program.status != 'RUN' && program.status != 'PAUSE'">
+                                        Edit Settings
+                                    </button>
+                                    <button class="btn btn-lg btn-default btn-block btn-dv"
+                                       data-toggle="modal" data-target="#program-schedule"
+                                       v-if="program.source_name != 'FileSource' && program.status != 'RUN' && program.status != 'PAUSE'">
+                                      Run Periodically
+                                    </button>
+                                    <button class="btn btn-lg btn-default btn-block btn-dv modal-archive-program"
+                                            v-if="program.status != 'RUN' && program.status != 'ARCH' && program.status != 'PAUSE'"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/archive/')">
+                                      Archive this {% trans 'Program' %}
+                                    </button>
+                                    <button class="btn btn-lg btn-default btn-block btn-dv modal-archive-program"
+                                            v-if="program.status == 'ARCH'"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/reactivate/')">
+                                      Reactivate this {% trans 'Program' %}
+                                    </button>
+                                    <button class="btn btn-lg btn-default btn-block btn-dv"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/pause/')"
+                                            v-if="program.status == 'RUN'">
+                                        Pause {% trans 'Program' %}
+                                    </button>
+                                    <button class="btn btn-lg btn-danger btn-block btn-dv"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/cancel/')"
+                                            v-if="program.status == 'RUN' || program.status == 'PAUSE'">
+                                        Cancel {% trans 'Program' %}
+                                    </button>
+                                    <button class="btn btn-lg btn-default btn-block btn-dv"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/analyse/')"
+                                            v-if="program.status != 'RUN' && program.status != 'ARCH' && program.status != 'PAUSE'">
+                                        Analyze this data
+                                    </button>
+                                    <button class="btn btn-lg btn-success btn-block btn-dv"
+                                            @click.stop.prevent="_processProgramAction('/program/' + getProgramPk() + '/resume/')"
+                                            v-if="program.status == 'PAUSE'">
+                                        Resume {% trans 'Program' %}
+                                    </button>
+                                    <button class="btn btn-lg btn-success btn-block btn-dv"
+                                            data-toggle="modal" data-target="#default-settings"
+                                            v-if="program.status != 'RUN' && program.status != 'ARCH' && program.status != 'PAUSE'">
+                                        Optimize Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-8">
+                    <div class="row" v-if="program.status == 'RUN' && program.progress != 100">
+                        <div class="col-xs-12">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped active"
+                                     v-bind:style="{width: program.progress + '%'}"
+                                     role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    <span class="program-progress">{$ program.progress $}</span>% Complete | {$ program.current_activity_description $}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" v-show="selectedReportType == 'snapshot'">
+                            <div class="col-xs-6"
+                                 v-if="program.current_quality_score && program.progress == 100">
+                                <h5>Contributing Factors</h5>
+
+                                <div align="left">Below are some metrics that factor into the quality score
+                                    calculation.
+                                </div>
+                                <div align="left" style="font-size:18px">
+                                    <div v-if="program.current_quality_score && program.current_quality_score.percent_complete != 'None'">
+                                        <i style="margin-right: 10px" class="fa fa-pie-chart text-primary"></i>
+                                        <b class="qs-percent_complete">{$ program.current_quality_score.percent_complete $}</b>%
+                                        record completeness
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.percent_valid_location != 'None'">
+                                        <i style="margin-right: 18px" class="fa fa-map-marker text-success"></i>
+                                        <b class="qs-percent_valid_location">{$ program.current_quality_score.percent_valid_location $}</b>%
+                                        valid location info
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.percent_valid_phone != 'None'">
+                                        <i style="margin-right: 18px" class="fa fa-phone text-success"></i>
+                                        <b class="qs-percent_valid_phone">{$ program.current_quality_score.percent_valid_phone $}</b>%
+                                        valid phone info
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.percent_valid_email != 'None'">
+                                        <i style="margin-right: 15px" class="fa fa-envelope text-success"></i>
+                                        <b class="qs-percent_valid_email">{$ program.current_quality_score.percent_valid_email $}</b>%
+                                        valid email addresses
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.percent_spam_email != 'None'">
+                                        <i style="margin-right: 18px" class="fa fa-ban text-danger"></i>
+                                        <b class="qs-percent_spam_email">{$ program.current_quality_score.percent_spam_email $}</b>%
+                                        spam records
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.avg_age != 'None'">
+                                        <i style="margin-right: 10px" class="fa fa-calendar text-warning"></i> Avg. age
+                                        of a record:
+                                        <b class="qs-avg_age">{$ program.current_quality_score.avg_age $} </b> days
+                                        <br>
+                                    </div>
+
+                                    <div v-if="program.current_quality_score && program.current_quality_score.avg_since_last_modified != 'None'">
+                                        <i style="margin-right: 10px" class="fa fa-hand-pointer-o text-primary"></i>
+                                        Time since last touch:
+                                        <b class="qs-avg_since_last_modified">{$ program.current_quality_score.avg_since_last_modified $} </b>
+                                        days
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 well"
+                                 v-if="program.current_quality_score && program.progress == 100">
+                                <div id="gage"></div>
+                            </div>
+
+                            <div class="col-xs-12 well"
+                                 v-if="program.status == 'RUN' && program.progress != 100" align="center">
+                                <h4>Score is being calculated.</h4>
+                                <p>To access the history of quality scores for this program, select "Quality Score Over Time" report.</p>
+                            </div>
+
+                            <div class="col-xs-12 well"
+                                 v-if="program.status == 'CANCEL'" align="center">
+                                <h4>{% trans 'Program' %} was cancelled.</h4>
+                                <p>This might have happened due to server issues so you might want to run the {% trans 'program' %} again.</p>
+                            </div>
+                            <div class="col-xs-12 well"
+                                 v-if="program.status == 'PAUSE'" align="center">
+                                <h4>{% trans 'Program' %} was paused.</h4>
+                                <p>You may resume this {% trans 'program' %} at any time.</p>
+                            </div>
+
+                            <div class="col-xs-12 well"
+                                 v-if="program.status == 'CREA'" align="center">
+                                <h4>Click 'Analyse this data' to score your data.</h4>
+                                <p>Variety of factors will influence the result such as validity of phone,
+                                    email and location information, completeness of information, age of information and more.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12" v-show="selectedReportType == 'scoreOverTime'">
+                            <canvas id="canvas" height="350" width="600" v-if="program.quality_scores && program.quality_scores.length"></canvas>
+                            <div class="col-xs-12 well"
+                                 v-if="program.quality_scores && !program.quality_scores.length" align="center">
+                                <h4>This {% trans 'program' %} has no score history yet.</h4>
+                                <p>You will be able to monitor {% trans 'program' %}'s score history.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12" v-show="selectedReportType == 'history'" align="center">
+                            <table v-if="program.reports && program.reports.length" class="table table-striped table-hover ">
+                                <tr>
+                                    <th></th>
+                                    <th># records</th>
+                                    <th>Duplicate groups</th>
+                                    <th>Duplicate records</th>
+                                    <th>Normalized records</th>
+                                    <th>Junk records</th>
+                                </tr>
+                                <tr v-for="report in program.reports">
+                                    <td><b>{$ report.date_created | calendarDate $}</b></td>
+                                    <td>{$ report.records $}</td>
+                                    <td>{$ report.duplicate_groups $}</td>
+                                    <td>{$ report.duplicate_records $}</td>
+                                    <td>{$ report.normalized_records $}</td>
+                                    <td>{$ report.junk_records $}</td>
+                                </tr>
+                            </table>
+
+                            <div class="col-xs-12 well"
+                                 v-if="!program.reports || !program.reports.length" align="center">
+                                <h4>This {% trans 'program' %} has no related history yet.</h4>
+                                <p>This report will contain information on the modifications we've done your data.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

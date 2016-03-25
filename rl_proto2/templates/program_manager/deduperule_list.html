@@ -1,0 +1,14 @@
+{% for element in elements %}
+<tr>
+  <td style="width: 35%">{{ element.field.get_label }}</td>
+  <td style="width: 60%">{{ element.get_rule_display }}</td>
+  <td style="vertical-align: middle;">
+    <form class="delete-form" method="POST" action={% url 'delete_dupmatchrule' element.pk %}>
+      {% csrf_token %}
+      <button type="submit">
+        <i class="fa fa-close text-default"></i>
+      </button>
+    </form>
+  </td>
+</tr>
+{% endfor %}

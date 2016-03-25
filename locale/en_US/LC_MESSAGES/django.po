@@ -1,0 +1,161 @@
+# Ringlead Translation File
+# Copyright (C) 2016
+# This file is distributed under the same license as the rl_proto2 package.
+# Javier Herrero <ethedona@gmail.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.0.88 \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-11 22:55+0100\n"
+"PO-Revision-Date: 2016-02-11 00:00+UTC\n"
+"Last-Translator: Javier Herrero <ethedona@gmail.com>\n"
+"Language-Team: Main Development Team <ethedona@lgmail.com>\n"
+"Language: American English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: integrations/salesforce/models.py:30
+msgid "Salesforce User ID"
+msgstr "Salesforce User ID"
+
+#: integrations/salesforce/models.py:36
+msgid "Salesforce Org Id"
+msgstr "Salesforce Org Id"
+
+#: integrations/salesforce/models.py:42
+msgid "Salesforce password"
+msgstr "Salesforce password"
+
+#: integrations/salesforce/models.py:48
+msgid "instance url"
+msgstr "Salesforce password"
+
+#: integrations/salesforce/models.py:53
+msgid "Access Token"
+msgstr "Access Token"
+
+#: integrations/salesforce/models.py:59
+msgid "ID URL"
+msgstr "ID URL"
+
+#: integrations/salesforce/models.py:65
+msgid "ID Token"
+msgstr "ID Token"
+
+#: integrations/salesforce/models.py:71
+msgid "Refresh Token"
+msgstr "Refresh Token"
+
+#: integrations/salesforce/models.py:77
+msgid "Issued At"
+msgstr "Issued At"
+
+#: integrations/salesforce/models.py:82
+msgid "Active"
+msgstr "Active"
+
+#: integrations/salesforce/models.py:87
+msgid "Thumbnail Photo"
+msgstr "Thumbnail Photo"
+
+#: integrations/salesforce/models.py:124
+msgid "Oauth token"
+msgstr "Oauth token"
+
+#: integrations/salesforce/models.py:125
+msgid "Oauth tokens"
+msgstr "Oauth tokens"
+
+#: program_manager/forms.py:116
+msgid "This field is required."
+msgstr "This field is required."
+
+#: program_manager/forms.py:123
+msgid "This operator requires a numeric value."
+msgstr "This operator requires a numeric value."
+
+#: program_manager/forms.py:130 program_manager/forms.py:170
+msgid "This operator requires a datetime value."
+msgstr "This operator requires a datetime value."
+
+#: rl_proto2/templates/admin/base_site.html:3
+msgid "RingLead site admin"
+msgstr "RingLead site admin"
+
+#: rl_proto2/templates/base.html:19
+msgid "RingLead Prototype"
+msgstr "RingLead Prototype"
+
+#: rl_proto2/templates/connections.html:5
+msgid "Continue Setup"
+msgstr "Continue Setup"
+
+#: rl_proto2/templates/includes/program_btn_info.html:15
+#: rl_proto2/templates/includes/program_header.html:11
+#: rl_proto2/templates/nav.html:24
+#: rl_proto2/templates/program_manager/analysis_confirm.html:26
+#: rl_proto2/templates/program_manager/list.html:19
+#: rl_proto2/templates/program_manager/list.html:25
+#: rl_proto2/templates/program_manager/list.html:68
+#: rl_proto2/templates/program_manager/list.html:155
+#: rl_proto2/templates/program_manager/program_detail_view.html:44
+#: rl_proto2/templates/program_manager/program_detail_view.html:54
+#: rl_proto2/templates/program_manager/program_detail_view.html:135
+#: rl_proto2/templates/program_manager/program_detail_view.html:139
+#: rl_proto2/templates/program_manager/program_detail_view.html:251
+msgid "Program"
+msgstr "Data Task"
+
+#: rl_proto2/templates/includes/program_btn_options.html:21
+#: rl_proto2/templates/includes/program_btn_options.html:31
+#: rl_proto2/templates/includes/program_sidebar_right.html:4
+#: rl_proto2/templates/program_manager/analysis_confirm.html:11
+#: rl_proto2/templates/program_manager/batch_process.html:12
+#: rl_proto2/templates/program_manager/list.html:140
+#: rl_proto2/templates/program_manager/notifications/program_end.html:3
+#: rl_proto2/templates/program_manager/notifications/program_end.html:23
+#: rl_proto2/templates/program_manager/program_detail_view.html:252
+#: rl_proto2/templates/program_manager/program_detail_view.html:267
+#: rl_proto2/templates/program_manager/program_detail_view.html:268
+#: rl_proto2/templates/program_manager/program_detail_view.html:294
+msgid "program"
+msgstr "data task"
+
+#: rl_proto2/templates/payments/plans.html:21
+#: rl_proto2/templates/program_manager/list.html:35
+#: rl_proto2/templates/program_manager/program_short_details.html:44
+#: rl_proto2/templates/reports/list.html:19
+msgid "Programs"
+msgstr "Data Tasks"
+
+#: rl_proto2/templates/program_manager/batch_confirm.html:40
+#: rl_proto2/templates/program_manager/batch_confirm.html:43
+msgid "Program name"
+msgstr "Data Task name"
+
+#: rl_proto2/templates/program_manager/import_select.html:29
+msgid "program name"
+msgstr "data task names"
+
+#: rl_proto2/templates/program_manager/list.html:52
+#: rl_proto2/templates/program_manager/list.html:139
+msgid "programs"
+msgstr "data tasks"
+
+#: rl_proto2/templates/registration/login.html:5
+msgid "Log in"
+msgstr "Log in"
+
+#: rl_proto2/templates/registration/logout.html:4
+msgid "Logged out"
+msgstr "Logged out"
+
+#: rl_proto2/templates/registration/logout.html:7
+msgid "Successfully logged out"
+msgstr "Successfully logged out"
+
+#: rl_proto2/templates/registration/registration_form.html:8
+msgid "Sign Up"
+msgstr "Sign Up"

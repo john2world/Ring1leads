@@ -1,0 +1,197 @@
+[
+  {
+    "fields": {
+      "last_login": "2016-01-22T15:29:02.033Z",
+      "mobile_number": null,
+      "is_active": true,
+      "last_name": "Fusaro",
+      "email": "josephmfusaro@gmail.com",
+      "first_name": "Joe",
+      "password": "pbkdf2_sha256$20000$UMxVbApkKPih$m1mSAS0xszimmjSyHHjplSAG7aiPIBoemMOE90oO4eE=",
+      "is_first_login": true,
+      "is_admin": true
+    },
+    "model": "accounts.customuser",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-22T15:18:12.497Z",
+      "mobile_number": "657465764",
+      "is_active": true,
+      "last_name": "Herrero",
+      "email": "ethedona@gmail.com",
+      "first_name": "Javier",
+      "password": "pbkdf2_sha256$20000$CQnEz4Tii7yM$umu+C77Au0No4QrmV++77dREWaHZCJ+vdeALvr3eoog=",
+      "is_first_login": true,
+      "is_admin": true
+    },
+    "model": "accounts.customuser",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "last_login": "2015-12-14T01:13:33.030Z",
+      "mobile_number": "2629576766",
+      "is_active": true,
+      "last_name": "Petrenko",
+      "email": "petrenko@gmail.com",
+      "first_name": "Igor",
+      "password": "pbkdf2_sha256$20000$WVQaaPcA1dlO$InEeTrV9ff+z7KQsZeH1f5EuhJ/xD+9MDgc3LaHOiFM=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-22T15:11:58.664Z",
+      "mobile_number": "7744526704",
+      "is_active": true,
+      "last_name": "Handy",
+      "email": "hanma10@ca.com",
+      "first_name": "Mark",
+      "password": "pbkdf2_sha256$20000$AcYEcrzvuu6Y$j0pzKKV/g01c8pF26IuqYCrcgOuYfN/4ATptTGaozIM=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "last_login": "2015-12-15T15:41:49.534Z",
+      "mobile_number": "",
+      "is_active": true,
+      "last_name": "Ferritto",
+      "email": "nicole.ferritto@ge.com",
+      "first_name": "Nikki",
+      "password": "pbkdf2_sha256$20000$qlFdExhz3rdA$pSgpUG+gsIthyJBKjXsVXurVu1/BxeEyHn++05N4Frc=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-20T22:01:12.564Z",
+      "mobile_number": "+998909253788",
+      "is_active": true,
+      "last_name": "Parakhnevich",
+      "email": "alex.parakhnevich@gmail.com",
+      "first_name": "Alex",
+      "password": "pbkdf2_sha256$20000$wSD1J7DY0pRu$AosOWiQG+rS5XmPJcRpprZEDxy9TMp1SEbe4EXugdO4=",
+      "is_first_login": true,
+      "is_admin": true
+    },
+    "model": "accounts.customuser",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-21T18:43:04.896Z",
+      "mobile_number": "16317072809",
+      "is_active": true,
+      "last_name": "Fusaro",
+      "email": "joe@ringlead.com",
+      "first_name": "Joe",
+      "password": "pbkdf2_sha256$20000$iiWWtt2CVCjQ$KD0PMi5Wy6EPRGByrBMITVk2iCSwkE9W6CgS+SVtU/g=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-21T22:19:55.014Z",
+      "mobile_number": "+999999999",
+      "is_active": true,
+      "last_name": "Svend",
+      "email": "karl.sv1031@gmail.com",
+      "first_name": "Karlsen",
+      "password": "pbkdf2_sha256$20000$OrVRtFifYiC0$mBPPhnu2bGhTrGdt1zxtc3Tu7wtkRqrsw3KitCBhXzU=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-14T17:59:06.875Z",
+      "mobile_number": "63170729898",
+      "is_active": true,
+      "last_name": "Lehr",
+      "email": "steve@ringlead.com",
+      "first_name": "Steve",
+      "password": "pbkdf2_sha256$20000$IKh1rOhIc1fI$0Z6lMyB9R4BsI6HJAcTZPJ8gDsrGXTU9c+s9tM3TlGY=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-20T13:56:27.393Z",
+      "mobile_number": "5514988116131",
+      "is_active": true,
+      "last_name": "Ariede",
+      "email": "caio.ariede@gmail.com",
+      "first_name": "Caio",
+      "password": "pbkdf2_sha256$20000$BylUqVPccA25$zMqvrcRu2zAIebyIqcVC43Zd3DML7Ml4K/nbPa3Dbi4=",
+      "is_first_login": true,
+      "is_admin": true
+    },
+    "model": "accounts.customuser",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-20T22:03:04.781Z",
+      "mobile_number": "+998909255678",
+      "is_active": true,
+      "last_name": "",
+      "email": "beardy@gmail.com",
+      "first_name": "",
+      "password": "pbkdf2_sha256$20000$KJoSXAMalSvd$NBzfKgg/bifV2xxD9wgCLxh3jPJAYL8/Pc6W8NnkUYw=",
+      "is_first_login": true,
+      "is_admin": true
+    },
+    "model": "accounts.customuser",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-21T19:24:36.275Z",
+      "mobile_number": null,
+      "is_active": true,
+      "last_name": "GE",
+      "email": "ge@ringlead.com",
+      "first_name": "RingLead",
+      "password": "pbkdf2_sha256$20000$Nywf2oZ7iIgj$FlaSNdXemmGic5QmB5TxdaJQwRJiVVogkNa2cmoveLI=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "last_login": "2016-01-22T21:42:34.543Z",
+      "mobile_number": "9546092204",
+      "is_active": true,
+      "last_name": "Waldmann",
+      "email": "alexander.waldmann@ca.com",
+      "first_name": "Alexander",
+      "password": "pbkdf2_sha256$20000$OgdSOFx4hQrS$soNtdwWnBMfP33jB7rmSv550OQHRBP1ZA04xYBr4AdU=",
+      "is_first_login": true,
+      "is_admin": false
+    },
+    "model": "accounts.customuser",
+    "pk": 25
+  }
+]

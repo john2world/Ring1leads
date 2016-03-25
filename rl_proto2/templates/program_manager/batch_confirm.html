@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block layout %}
+
+
+    <div class="row">
+        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-8 col-lg-offset-3 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
+            <h3>Step 3: Confirm & Run</h3>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4" align="right">
+            <div class="btn-group btn-lg" role="group">
+                <a href="{% url 'batch_select' %}?pk={{ object.pk }}" class="btn btn-lg btn-default ">1</a>
+                <a href="{% url 'select_actions' object.pk %}" class="btn btn-lg btn-default">2</a>
+                <a href="{% url 'batch_confirm' object.pk %}" class="btn btn-lg btn-default active">3</a>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 col-lg-offset-3 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form action="{% url 'batch_confirm' object.pk %}" method="POST" role="form"
+                          class="form-horizontal" id="program-name-form">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="run_now" value="off" />
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
+                                {% if form.name.errors %}
+                                    <div class="has-error">
+                                        <label class="control-label" for="inputError">{{ form.name.errors.as_text }}</label>
+                                        {% render_field form.name class+="form-control" placeholder=_("Program name") %}
+                                    </div>
+                                {% else %}
+                                    {% render_field form.name class+="form-control" placeholder=_("Program name") %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 program-edit-button-container" align="center">
+                                <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">Cancel</a>
+                                <button class="btn btn-lg btn-primary" id="run-later">
+                                    Save &amp; Run Later
+                                </button>
+                                <button class="btn btn-lg btn-success" id="run-now">
+                                    Save &amp; Run Now
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#run-now').click(function(e) {
+            $('input[name="run_now"]').val('on');
+            $('#program-name-form').submit();
+        });
+
+        $('#run-later').click(function(e) {
+            $('input[name="run_now"]').val('');
+            $('#program-name-form').submit();
+        });
+    </script>
+
+{% endblock %}

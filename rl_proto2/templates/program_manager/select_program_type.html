@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+      <h3>I want to...</h3>
+  </div>
+</div>
+<hr>
+<br>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <!-- row -->
+    <div class="row">
+      <div class="col-md-4" style="height:100%">
+          <a href="{% url 'batch_select' %}?pk={{ program.pk }}" data-toggle="tooltip" title="Analyze and optimize a set of records in a connected database." data-placement="bottom" class="btn btn-large btn-primary btn-block">
+              <i class="fa fa-database fa-5x"></i><br>
+              <span class="cta-primary-btn-text">Work on My Database</span>
+          </a>
+      </div>
+
+      <div class="col-md-4" style="height:100%">
+          <a href="{% url 'import_select' %}"
+          data-toggle="tooltip"
+          title="Analyze and optimize a CSV file, then (optionally) import it into your connected database."
+          data-placement="bottom"
+          class="btn btn-large btn-primary btn-block">
+              <i class="fa fa-file-excel-o fa-5x"></i><br>
+              <span class="cta-primary-btn-text">Work on a Spreadsheet</span>
+          </a>
+      </div>
+
+      <div class="col-md-4" style="height:100%">
+          <a href="#"
+              data-toggle="tooltip"
+              title="Set up a web form, Marketo webhook, or Salesforce trigger to optimize your data in real-time."
+              data-placement="bottom"
+              class="btn btn-large btn-primary btn-block"
+              disabled
+              >
+              <i class="fa fa-bolt fa-5x"></i><br>
+              <span class="cta-primary-btn-text">Integrate Web Forms</span>
+          </a>
+      </div>
+    </div>
+    <!-- / row -->
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<div class="row">
+  <div class="col-md-12" align="center">
+    <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">Cancel</a>
+  </div>
+</div>
+<br>
+<br>
+
+{% endblock %}

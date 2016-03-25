@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% load i18n static widget_tweaks date_utils %}
+
+{% block layout %}
+<div class="row">
+  <div class="col-md-5 col-md-offset-1">
+    <h3>Select a Data Set</h3>
+  </div>
+  <div class="col-md-5" align="right" >
+{#      {% include 'includes/batch_program_button_group.html' %}#}
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <div class="row">
+      <div class="col-md-5 col-md-offset-1">
+        <h5>Select a Table</h5>
+        <!-- For each available table... -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="checkbox">
+                      <label><input type="checkbox" value="" checked disabled>Leads</label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" value="" disabled>Contacts</label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="checkbox disabled">
+                      <label><input type="checkbox" value="" disabled>Accounts</label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" value="" disabled>Opportunities</label>
+                    </div>
+                </div>
+            </div>
+      </div>
+      <div class="col-md-4">
+        <h5>Select a Database</h5>
+        <br>
+        <div class="form-group">
+          <select class="form-control" disabled>
+            <option selected value="salesforce" >Salesforce</option>
+            <option value="marketo">Marketo</option>
+            <option value="custom_db">ERP System</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-5 col-md-offset-1">
+        <h5>Add Filters</h5>
+        <div class="row">
+          <div class="col-sm-11">
+            {% if not field_filters %}
+            <p>No filters selected</p>
+            {% else %}
+                {% for i in field_filters %}
+                    <form action="{% url 'delete_fieldfilter' i.pk %}" method="POST">
+                        <div class="alert alert-dismissible label-primary program-filter">
+                            <button class="close" type="submit">
+                                <span>&times;</span>
+                            </button>
+                            <i>{{ i.field.get_label }}</i>
+                            {{ i.get_operator_display }}
+                            {% if i.field.type == 'datetime' or i.field.type == 'date' %}
+                                {{ i.field_value|parse_datetime|date:"m/d/Y" }}  &nbsp;&nbsp;&nbsp;
+                            {% else %}
+                                {{ i.field_value }}  &nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                            {% csrf_token %}
+                        </div>
+                    </form>
+                {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <br>
+        <div class="row" align="center">
+          <a href="#" data-toggle="modal" data-target="#FiltersModal" class="btn btn-sm btn-default">Add a Filter</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5>Record Count</h5>
+        <br>
+        <button class="btn btn-default btn-lg btn-link record-count" disabled><span class="count"></span><i class="fa fa-refresh" style="margin-left:10px"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="row">
+  <div class="col-md-12 program-edit-button-container" align="center">
+    <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">Cancel</a>
+    <a href="{% url 'program_details' program.pk %}" class="btn btn-lg btn-success">Continue</a>
+  </div>
+</div>
+
+<!-- Filters Modal -->
+<div class="modal fade" id="FiltersModal" tabindex="-1" role="dialog" aria-labelledby="FiltersModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="FiltersModalLabel">Add a Filter</h4>
+      </div>
+
+      <form method="POST" action="{% url 'batch_select' %}?pk={{ program.pk }}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <table class="table well">
+            {{ form.non_field_errors }}
+            <thead>
+              <tr>
+                <td>Field Name</td>
+                <td>Operator</td>
+                <td class="value-column">Value</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {{ form.field | set_data:"live-search:true" | add_class:"selectpicker" }}
+                </td>
+                <td>
+                  {{ form.operator }}
+                </td>
+                <td class="value-column">
+                  {{ form.field_value }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {% if form.field.errors %}
+                  <div class="alert alert-danger">
+                    {{ form.field.errors.as_text }}
+                  </div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if form.operator.errors %}
+                  <div class="alert alert-danger">
+                    {{ form.operator.errors.as_text }}
+                  </div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if form.field_value.errors %}
+                  <div class="alert alert-danger">
+                    {{ form.field_value.errors.as_text }}
+                  </div>
+                  {% endif %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Add this filter</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+    var type_table = {{ type_table | safe }};
+    var unary_operators = {{ unary_operators | safe }};
+    $(document).ready(function () {
+      /* open modal if there are any errors in the form */
+      {% if form.errors %}
+      $('#FiltersModal').modal('show');
+      {% endif %}
+      filter_operators(type_table, unary_operators);
+      /* load count */
+      !function(btn){
+        var count = btn.find('.count');
+
+        function loadCount() {
+          btn.attr('disabled', true);
+          count.html('Calculating…');
+
+          $.ajax({
+            url: '{% url "count_data" program.pk %}',
+            dataType: 'json',
+            success: function(data){
+              count.html(numberWithCommas(data.count));
+            },
+            error: function(data){
+              try {
+                var error = JSON.parse(data.responseText);
+
+                if (error.type == 'salesforceerror') {
+                    alert('Error code: ' + error.data.errorCode + '\n' + error.data.message);
+                }
+                else if (error.type == 'connectionerror') {
+                    alert('An error occurred when estabilishing a connection with the remote server.\nPossible cause: the remote server is in maintenance.');
+                }
+
+              } catch (e) {}
+
+              count.html('Error');
+            },
+            complete: function(){
+              btn.unbind('fade-cycle', fadeCycle);
+              btn.removeAttr('disabled');
+              btn.removeAttr('data-fade-cycle');
+            }
+          });
+
+          // fade-cycle
+          btn.bind('fade-cycle', fadeCycle);
+          btn.trigger('fade-cycle');
+        }
+
+        function fadeCycle() {
+          $(this).fadeOut('fast', function(){
+            $(this).fadeIn('slow', function(){
+              $(this).trigger('fade-cycle');
+            });
+          });
+        }
+
+        function numberWithCommas(x) {
+          // http://stackoverflow.com/a/2901298/639465
+          var parts = x.toString().split(".");
+          parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          return parts.join(".");
+        }
+
+        btn.click(loadCount);
+
+        loadCount.apply(btn.get(0));
+
+      }($('.record-count'));
+    });
+</script>
+
+{% endblock %}

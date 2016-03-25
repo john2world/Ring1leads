@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+<br>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+            <div class="col-md-6">
+            <h5>I want to work on...</h5>
+            <br>
+            <div class="form-group">
+                <select class="form-control" rows="5" id="comment">
+                  <option selected value="csv" >a CSV File</option>
+                  <option value="salesforce" >Salesforce Records</option>
+                  <option value="marketo">Marketo Records</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+          </div>
+          <div class="col-sm-6" style="height:250px">
+              <div class="row" align="center">
+                  <br>
+                  <br>
+                  <br>
+                  <a href="#" class="btn btn-lg btn-primary btn-block" style="margin-left:30px"><i class="fa fa-upload"></i> Upload File</a>
+              </div>
+          </div>
+          <!-- <div class="col-sm-6 well well-sm">
+              <a href="#" class="active btn btn-default">Campaigns</a>
+              <a href="#" class="btn btn-default">Users</a>
+              <br>
+              <br>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search..." id="email">
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="">CA World 2015</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="">Cloud Computing World</label>
+              </div>
+              <div class="checkbox disabled">
+                <label><input type="checkbox" value="">Gartner Summit</label>
+              </div>
+          </div> -->
+      </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" align="center">
+        <a href="{% url 'analysis_confirm' %}" class="btn btn-lg btn-success">Continue</a>
+    </div>
+</div>
+
+
+{% endblock %}

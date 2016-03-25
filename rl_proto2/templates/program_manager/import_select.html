@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static bootstrap3 %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'dropzone/dropzone.css' %}">
+{% endblock %}
+{% block layout %}
+<br>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <h3>Step 1: Select Your .CSV File</h3>
+  </div>
+</div>
+<hr>
+<div class="row">
+    <br>
+    {% if not results %}
+        <div class="text-center">
+            <div class="dropzone" id="dropzone-container">
+
+            </div>
+        </div>
+        <br/><br/>
+        <form method="post" enctype="multipart/form-data" id="submit_form">
+            {% csrf_token %}
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <input class="form-control" maxlength="256" name="name" placeholder="Enter a {% trans 'program name' %}" required="required" type="hidden" id="txt_name">
+                </div>
+
+                <div class="col-md-2" id="file_container">
+                </div>
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+                <br>
+                <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">Cancel</a>
+            </div>
+        </form>
+
+    {% else %}
+        <div class="col-xs-12">
+            <p>
+                Your file is uploaded and currently is being analysed.
+                <br>
+                Please check <a href="#">this</a> link to see its status.</p>
+        </div>
+    {% endif %}
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<div class="row">
+  <div class="col-md-12" align="center">
+  </div>
+</div>
+<br>
+<br>
+
+{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'dropzone/dropzone.js' %}"></script>
+    <script type="text/javascript">
+        var addedfiles = 0;
+        $(document).ready(function(){
+            Dropzone.options.dropzoneContainer = {
+                url: "{{ request.get_full_path }}",
+                maxFilesize: 50, // MB
+                uploadMultiple: false,
+                autoProcessQueue: false,
+                maxFiles: 1,
+                hiddenInputContainer: "#file_container",
+                dictDefaultMessage: "<h3>Drag and drop your CSV file to begin the import process</h3><small>or click to select a file</small>",
+                init: function() {
+                    this.on("addedfile", function(file) {
+                        addedfiles ++;
+                        $("#txt_name").val(file.name.split(".")[0]);
+                        $("#submit_form").submit();
+                    });
+                }
+            };
+        });
+    </script>
+{% endblock %}

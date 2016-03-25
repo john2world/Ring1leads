@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="row" xmlns="http://www.w3.org/1999/html">
+  <div class="col-md-5 col-md-offset-1">
+    <div class="btn-group btn-lg" role="group">
+      <a href="{% url 'programs' %}" class="btn btn-lg btn-default">Dashboard View</a>
+      <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">List View</a>
+    </div>
+  </div>
+  <div class="col-md-5" align="right" >
+    <div class="btn-group btn-lg" role="group">
+      <a href="{% url 'create_program' %}" class="btn btn-lg btn-success">New {% trans 'Program' %}</a>
+    </div>
+  </div>
+</div>
+<hr>

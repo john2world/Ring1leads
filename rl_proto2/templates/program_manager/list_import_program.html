@@ -1,0 +1,25 @@
+{% extends 'reports/snapshot.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block report_title %}Step 2: Analyze{% endblock %}
+
+{% block report_header %}
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1" align="center">
+          <h3>Step 2: Analyze</h3>
+        </div>
+        <div class="col-md-5" align="center">
+            <a href="{% url 'program_list' %}" class="btn btn-default btn-lg">Cancel</a>
+            <a href="#" class="btn btn-success btn-lg" disabled>Optimize & Import This File</a>
+        </div>
+    </div>
+    <hr>
+{% endblock %}
+
+{% block layout %}
+    {% with qscore=object.get_current_quality_score %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}

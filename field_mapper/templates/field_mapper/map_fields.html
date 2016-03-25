@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static bootstrap3 %}
+
+{% block layout %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            {% include 'includes/messages.html' %}
+            <br>
+            <h3>We weren't able to detect some fields, could you please help us?</h3>
+            <hr>
+            <div class=well>
+                <b>
+                    We could not detect some fields which are needed for our
+                    quality analysis. Map the columns from your list or skip
+                    this step.
+                </b>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <br>
+        <form method="post" enctype="multipart/form-data" id="submit_form">
+            {% csrf_token %}
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                    {% for field in form.visible_fields %}
+                        <div class="col-md-3">
+                            {% bootstrap_field field %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-10 text-center">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-lg btn-primary" value="" id=submit>
+                <a href="{% url 'program_list' %}" class="btn btn-lg btn-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        var inputs = $('#submit_form select');
+
+        function change_submit_label() {
+            var label = '';
+
+            if (inputs.filter(function(){return $(this).val() }).length > 0) {
+                label = 'Submit';
+            } else {
+                label = 'Skip';
+            }
+
+            $('#submit').val(label);
+        }
+
+        $(change_submit_label);
+        inputs.change(change_submit_label);
+    </script>
+{% endblock layout %}

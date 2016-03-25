@@ -1,0 +1,18 @@
+{% load i18n %}
+<div align="center">
+    <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#newProgramModal">
+      <i class="fa fa-plus-circle"></i> New {% trans 'program' %}
+    </a>
+</div>
+<br>
+<br>
+<p>You might also want to...</p>
+<a href="{% url 'accounts:connections' %}"><i class="fa fa-plug"></i> Manage connections</a>
+<br>
+<a href="{% url 'reports' %}"><i class="fa fa-bar-chart"></i> View data reports</a>
+<br>
+<hr>
+<h5>Support</h5>
+<a href="#"><i class="fa fa-life-ring"></i> Help</a>
+<br>
+<a href="#"><i class="fa fa-play-circle"></i> Get Training</a>

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+
+
+	<div id="headerwrap">
+		<div class="container">
+			<br>
+			<div class="row">
+				<div class="col-md-12 fade-in welcome_0" align="center">
+								<span style="font-size:36px">Welcome {{ user.first_name }}</span><br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 fade-in welcome_1" align="center">
+					<span style="font-size:20px">See how RingLead can help you...</span>
+				</div>
+			</div>
+
+
+			<div class="row" style="padding-top:30px">
+					<div class="col-md-8 col-md-offset-2">
+								<br>
+								<div class="row ">
+									<div class="col-sm-4 fade-in welcome_2">
+										<div align="center">
+                        <i class="fa fa-line-chart fa-5x"></i>
+										</div>
+										<h4 align="center">Make Marketing Better</h4>
+										<p>Improve your marketing metrics by providing smart data operations in Salesforce, Marketo and more.</p>
+									</div><!--/col-lg-4 -->
+									<div class="col-sm-4 fade-in welcome_3">
+                    <div align="center">
+                      <i class="fa fa-usd fa-5x"></i>
+										</div>
+										<h4 align="center">Better Equip Your Sales Team</h4>
+										<p>Make sales reps drastically more effective by letting them focus on closing instead of data wrangling.</p>
+									</div><!--/col-lg-4 -->
+
+									<div class="col-sm-4 fade-in welcome_4">
+										<div align="center">
+                      <i class="fa fa-dashboard fa-5x"></i>
+										</div>
+										<h4 align="center">Get True Data Visibility</h4>
+										<p>Attain crystal clear analysis on the factors that are driving your business.</p>
+
+									</div><!--/col-lg-4 -->
+								</div><!-- /row -->
+                <br>
+								<div class="row">
+										<div class="col-md-12 fade-in welcome_btn" align="center">
+											<a href="{% url 'accounts:connections' %}" class="btn btn-lg btn-warning">Begin Setup <i class="fa fa-angle-double-right fa-inverse"></i></a>
+										</div>
+								</div>
+					</div>
+
+{% endblock %}

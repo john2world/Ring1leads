@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% block extra_css %}
+    <link href="{% static 'select2/css/select2.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block layout %}
+
+
+      <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <span style="font-size:24px">Notifications</span>
+            <hr>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            {% if user.is_admin %}
+            <div class="text-right">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#add_notification_modal">Add New Notification</button>
+            </div>
+            <br/>
+            {% endif %}
+            <div is="notification-list" inline-template>
+                <table class="table" id="notification_table">
+                    {% if notifications %}
+                        <thead>
+                            <th>Subject</th>
+                            <th>Created at</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                        {% for item in notifications %}
+                            <tr notificationid="{{ item.id }}">
+                                <td><a href="javascript:;" @click="showNotificationItem('{{ item.subject }}', '{{ item.text|escapejs }}', {{ item.id }});">{{ item.subject }}</a></td>
+                                <td>{{ item.created }}</td>
+                                <td align=right><span class="btn btn-sm btn-default" @click="archiveNotification('{{ item.id }}')"><i class="fa fa-archive"></i></span> </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <!-- if there are no notifications... -->
+                        <br>
+                        <p align="center" style="font-size:18px">Data operations are running smoothly right now and there are no notifications.</p>
+                    {% endif %}
+                </table>
+                <!-- Modal -->
+                <div id="notification_modal" class="modal fade {$ modalClass $}" role="dialog" :style="{ display: modalDisplay }">
+                    <div class="modal-dialog modal-lg">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" @click="showModal = false">&times;</button>
+                                <h4 class="modal-title">{$ currentNotification.subject $}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="word-wrap: break-word">{$$ currentNotification.text $$}</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" @click="showModal = false">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- notification-list -->
+        </div>
+      </div>
+{% if user.is_admin %}
+<!-- Modal -->
+<div id="add_notification_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'notifications' %}" onsubmit="return submitCreateForm();">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Notification</h4>
+      </div>
+      <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label">
+                    {{ form.subject.label }}
+                </label>
+
+                <div class="">
+                    {% render_field form.subject class+="form-control" placeholder="Subject" required="required" %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">
+                    {{ form.text.label }}
+                </label>
+
+                <div class="">
+                    {% render_field form.text class+="form-control" placeholder="Details" rows="5" required="required" %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">
+                    {{ form.sharedwith.label }}
+                </label>
+                <div class="form-control">
+                    <input type="checkbox" checked="checked" title="Everyone" id="chkEveryone"> <span>Everyone</span>
+                </div>
+                {% render_field form.sharedwith class+="form-control hidden" %}
+                <div class="form-control">
+                    <select class="sharedwith-select " multiple="multiple" style="width: 100%;" disabled="disabled">
+                    </select>
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'select2/js/select2.min.js' %}"></script>
+<script type="text/javascript">
+    function open_notification_modal(subject, detail_txt, pk) {
+        $("#notification_detail_modal").find("#notification_detail_subject").html(subject);
+        $("#notification_detail_modal").find("#notification_detail_txt").html(detail_txt);
+        $("#notification_detail_modal").modal('show');
+        $.ajax({
+            url: '{% url 'notification_status' %}',
+            data: {'pk': pk},
+            success: function (data, text_status, jqXHR) {}
+        });
+    }
+
+    function submitCreateForm() {
+        if ( $("#chkEveryone").is(":checked") ) {
+            $("input[name='sharedwith']").val("::1");
+        } else {
+            var shared_users = $('.sharedwith-select').val();
+            if ( shared_users.length == 0 ) {
+                $("input[name='sharedwith']").val("::1");
+            } else {
+                $("input[name='sharedwith']").val(shared_users.join());
+            }
+        }
+
+        return true;
+    }
+
+    // Initialize select2
+    var users = [];
+    {% if user.is_admin %}
+        {% for user in users %}
+            users.push({
+                id: {{ user.pk }},
+                text: '{{ user.first_name }}'
+            });
+        {% endfor %}
+    {% endif %}
+
+    $(document).ready(function(){
+        $(".sharedwith-select").select2({
+            data: users
+        });
+
+        $("#chkEveryone").change(function(e){
+            if ($(this).is(":checked")) {
+                $(".sharedwith-select").get(0).disabled = 'disabled';
+            } else {
+                $(".sharedwith-select").get(0).disabled = '';
+            }
+        });
+    });
+
+
+</script>
+{% endblock %}

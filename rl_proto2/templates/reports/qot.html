@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={
+            'modules':[{
+              'name':'visualization',
+              'version':'1',
+              'packages':['corechart']
+            }]
+          }"></script>
+
+    <script type="text/javascript">
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'Score',],
+          {% for i in report.get_all_quality_scores %}
+            ['{{ i.created }}', {{ i.score }},],
+          {% endfor %}
+        ]);
+
+        var options = {
+          // title: 'Quality Score for {{ report.batch_program.name }} over time',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+
+    <div class="row">
+        <div class="col-md-10" align="center">
+          <h3>{{ program.name }}: Quality Score Over Time</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1" align="center">
+          <div id="curve_chart" style="height:100%"></div>
+      </div>
+    </div>
+
+{% endblock %}

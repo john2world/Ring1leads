@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+
+      <div class="row">
+          <div class="col-md-offset-1 col-md-10">
+              <span style="font-size:24px">Choose your plan</span>
+              <hr>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-offset-1 col-md-3">
+              <span style="font-size:24px">Pro</span>
+              <br>
+              <br>
+              <br>
+              <ul>
+                <li>Batch and List Import {% trans 'Programs' %}</li>
+                <li>1 database connection</li>
+                <li>Basic email support</li>
+              </ul>
+              <br>
+              <a href="#" class="btn btn-success active">Your current plan</a>
+          </div>
+          <div class="col-md-3">
+              <span style="font-size:24px">Premium</span>
+              <br>
+              <br>
+              <i>Everything included in Pro, plus:</i>
+              <ul>
+                <li>Real-Time {% trans 'programs %}</li>
+                <li>2 database connections</li>
+                <li>Priority email support</li>
+              </ul>
+              <br>
+              <a href="#" class="btn btn-success disabled">Choose this plan</a>
+          </div>
+          <div class="col-md-3">
+              <span style="font-size:24px">Enterprise</span>
+              <br>
+              <br>
+              <i>Everything included in Premium, plus:</i>
+              <ul>
+                <li>API access</li>
+                <li>Unlimited database connections</li>
+                <li>Priority email and phone support</li>
+              </ul>
+              <br>
+              <a href="#" class="btn btn-success disabled">Choose this plan</a>
+          </div>
+      </div>
+
+{% endblock %}

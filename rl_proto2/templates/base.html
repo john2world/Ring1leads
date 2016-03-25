@@ -1,0 +1,162 @@
+{% load static %}
+{% load staticfiles %}
+{% load i18n %}
+
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}" class="no-js">
+    <head>
+        {% block head %}
+            {% block meta %}
+                <meta charset="utf-8">
+                <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                <meta property="og:title" content="RingLead Prototype v2" />
+                <meta property="og:url" content="http://www.ringlead.com"/>
+                <meta property="og:description" content="RingLead Prototype"/>
+            {% endblock %}
+                <title>
+                    {% block title %}
+                        {% trans 'RingLead Prototype' %}
+                    {% endblock %}
+                </title>
+        {% endblock %}
+
+        <!-- Latest compiled and minified CSS -->
+{#        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" media="screen">#}
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootswatch-paper.css' %}" media="screen">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/custom.css' %}" media="screen">
+        <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+        <link href="{% static 'bootstrap-toggle-master/css/bootstrap-toggle.min.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap-select-master/dist/css/bootstrap-select.min.css' %}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />
+
+        {% block extra_css %}{% endblock %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/jquery.formset.js' %}"></script>
+        <script src="{% static 'js/jquery-ui.js' %}"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'justgage/raphael.min.js' %}"></script>
+        <script src="{% static 'justgage/justgage.min.js' %}"></script>
+        <script src="{% static 'bootstrap-toggle-master/js/bootstrap-toggle.min.js' %}"></script>
+        <script src="{% static 'bootstrap-select-master/js/bootstrap-select.js' %}"></script>
+        <script src="{% static 'vue.js' %}"></script>
+        <script src="{% static 'js/js.cookie.js' %}"></script>
+        <script src="{% static 'js/moment.js' %}"></script>
+        {% block extra_js %}{% endblock %}
+        <!-- Enable custom bootstrap-select lib -->
+
+        <script>
+            var old_ajax = $.ajax
+            $.ajax = function(settings) {
+                if (settings.dataType == 'json' || ! settings.dataType)
+                    settings.dataType = 'jsonp';
+                return old_ajax(settings);
+            }
+        </script>
+
+    </head>
+    <body consume-events="{% block consume-events %}notification{% endblock %}">
+
+        {% block body %}
+
+            {% include 'nav.html' %}
+              <div class="col-md-12">
+                {% block layout %}
+                {% endblock %}
+              </div>
+
+        {% endblock %}
+
+        <!-- <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script> -->
+        <!-- <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap-switch.js' %}"></script> -->
+        <script src="{% static 'components.js' %}"></script>
+    </body>
+
+    <script type='text/javascript'>
+      function enable_selectpickers() {
+        $('select.selectpicker').selectpicker();
+        $('select.selectpicker').selectpicker('setStyle', 'selectpicker-flat');
+        $('.bootstrap-select').removeClass('form-control');
+        $('.bootstrap-select').addClass('selectpicker-container');
+      } 
+
+      /* check if a program job has finished */
+      function job_is_finished(pk, callback) {
+        $.ajax({
+            url: '{% url 'job_status' %}',
+            data: {'pk': pk},
+            success: function (data, text_status, jqXHR) {
+              if (data['status'] == 'SUCCESS') {
+                callback();
+              }
+            }
+        });
+      }
+
+      /* remove operators that don't apply for a certain field */
+      function filter_operators(type_table, unary_operators, target) {
+        if (target === undefined) {
+          target = document;
+        }
+        $(target).find('.operator-select').each(function (i) {
+          if (this.filter_attached) {
+            return;
+          } else {
+            this.filter_attached = true;
+          }
+          var op_select = this;
+          var allOptions = $(this).find('option');
+          var owner = $(this).closest('div');
+          var original_operator = $(this).val();
+          $(op_select).change(function () {
+            if ($(this).val() != original_operator) {
+              original_operator = false;
+            }
+            var value_cell  = $(owner).find('.value-column');
+            if (unary_operators.indexOf($(this).val()) > -1) {
+              $(owner).find('.rule-value').hide();
+              value_cell.hide();
+            } else {
+              $(owner).find('.rule-value').show();
+              value_cell.show();
+            }
+          }).change();
+          $(owner).find('.field-select').change(function () {
+            $(op_select).find('option').remove();
+            var type = type_table[$(this).find('option:selected').val()];
+            var value_cell  = $(owner).find('.value-column');
+            var opts = allOptions.filter('.opfilter_' + type);
+            $.each(opts, function (i, j) {
+              $(j).appendTo(op_select);
+            });
+            if (original_operator) {
+              if ($(op_select).find("option[value='" + original_operator +"']").length > 0) {
+                $(op_select).val(original_operator);
+              }
+            }
+            $(op_select).change();
+          }).change();
+        });
+      }
+
+
+      /* get status of job */
+      function job_status(pk, callback) {
+        $.ajax({
+            url: '{% url 'job_status' %}',
+            data: {'pk': pk},
+            success: function (data, text_status, jqXHR) {
+              callback(data);
+            }
+        });
+      }
+
+      $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        enable_selectpickers();
+      });
+    </script>
+
+</html>

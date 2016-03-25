@@ -1,0 +1,461 @@
+/* Cool Fade-In Stuff for Buttons */
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.fade-in {
+ opacity:0;  /* make things invisible upon start */
+ -webkit-animation:fadeIn ease-in 1;  /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+ -moz-animation:fadeIn ease-in 1;
+ animation:fadeIn ease-in 1;
+
+ -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+ -moz-animation-fill-mode:forwards;
+ animation-fill-mode:forwards;
+
+ -webkit-animation-duration:1s;
+ -moz-animation-duration:1s;
+ animation-duration:1s;
+}
+
+.fade-in.index_buttons {
+-webkit-animation-delay: 2s;
+-moz-animation-delay: 2s;
+animation-delay: 2s;
+}
+
+.fade-in.welcome_0 {
+-webkit-animation-delay: 1s;
+-moz-animation-delay:1s;
+animation-delay: 1s;
+}
+
+.fade-in.welcome_1 {
+-webkit-animation-delay: 3s;
+-moz-animation-delay:3s;
+animation-delay: 3s;
+}
+
+.fade-in.welcome_2 {
+-webkit-animation-delay: 5s;
+-moz-animation-delay:5s;
+animation-delay: 5s;
+}
+
+.fade-in.welcome_3 {
+-webkit-animation-delay: 7s;
+-moz-animation-delay:7s;
+animation-delay: 7s;
+}
+
+.fade-in.welcome_4 {
+-webkit-animation-delay: 9s;
+-moz-animation-delay:9s;
+animation-delay: 9s;
+}
+
+.fade-in.welcome_btn {
+-webkit-animation-delay: 12s;
+-moz-animation-delay:12s;
+animation-delay: 12s;
+}
+
+/* overwrite text-transform: Uppercase in Paper template */
+.btn {
+  text-transform: none;
+}
+
+/* enable hover for btn dropdowns */
+.dropdown:hover .dropdown-menu {
+display: block;
+}
+
+#tel-valid-msg, #tel-error-msg {
+    position: absolute;
+}
+#tel-valid-msg i{
+    color: #3c763d;
+}
+#tel-error-msg i{
+    color: #a94442;
+}
+
+.checkbox-space {
+  margin:20px;
+  margin-top:30px;
+  margin-bottom:30px;
+}
+
+.actions-box {
+  height:100%;
+}
+
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  border-top: 0px;
+}
+
+.subtle_header {
+  color:#737373;
+}
+
+.cta-primary-btn-text {
+  color:#fff;
+  font-size:24px;
+}
+
+/* Add style for list import button */
+.btn-import-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-import-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-link-delete-label:hover {
+    background-color: #2196f3;
+    color: #8c8c8c;
+  }
+
+.program-item {
+    position: relative;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 10px;
+}
+
+.program-item .loading-container {
+    z-index: 15;
+    background: rgba(255,255,255, 0.7);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;top: 0;
+    text-align: center;
+}
+.program-item .loading-container i {
+    font-size: 100px;
+}
+i.td-archive-loading {
+    font-size: 20px;
+    float: right;
+    margin-right: 10px;
+}
+
+form .form-wide {
+    width: 45% !important;
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+input[id$="-DELETE"][type=checkbox], label[for$="-DELETE"] {
+    display: none;
+}
+
+/*
+input.rule-value {
+    display: none !important;
+}
+*/
+
+.selectpicker-flat {
+  width: 100%;
+  box-shadow: 0px -1px 0px #DDD inset;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+  font-size: 16px;
+  line-height: 1.5;
+  height: 37px;
+  outline: none !important;
+  display: block !important;
+  margin-bottom: 20px !important;
+}
+
+.selectpicker-container {
+  width: 100%;
+  box-shadow: 0px -1px 0px #DDD inset;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+  font-size: 16px;
+  line-height: 1.5;
+  height: 37px;
+  outline: none !important;
+  display: block !important;
+  margin-bottom: 20px !important;
+}
+
+
+.selectpicker-container {
+  width: 100% !important;
+}
+
+[data-formset-form] {
+  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.fa.fa-grip:before {
+    content: "\f142 \202F \f142 \202F \f142";
+}
+.fa.fa-grip-large:before {
+    content: "\f142 \202F \f142 \202F \f142 \202F \f142 \202F \f142 \202F \f142 \202F \f142";
+}
+
+.transparent-button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.grip {
+  background-image: url("/static/img/drag-grip.png");
+  height: 13px;
+  width: 13px;
+  background-repeat: no-repeat;
+  margin-top: 13px;
+  margin-right: 10px;
+  float: left;
+}
+
+.sortable-placeholder {
+  border: 1px dashed black;
+  width: 100%;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  height: 32px;
+}
+
+label[for$="ORDER"], input[name$="ORDER"] {
+  display: none;
+}
+
+/* Notification Badge for Alerts */
+.badge-notify{
+  position:absolute;
+  background:red;
+  /*z-index: 1;*/
+   top: 20px;
+   left: 30px;
+}
+
+.settings-container label {
+    white-space: nowrap;
+}
+.settings-container label .settings-set-label { min-width: 150px; display: inline-block; }
+.modal-footer-button { margin-top: 10px; }
+
+/* Align icons vertically */
+
+@media (max-width: 768px) {
+    .ringlead-nav > li > a > i:first-child {
+        vertical-align: -4px;
+        text-align: center;
+        width: 40px;
+    }
+
+    .ringlead-nav > li > a > span:last-child {
+        font-size: 16px;
+        padding-left: 8px;
+    }
+}
+
+/* No more tables */
+@media only screen and (max-width: 800px) {
+    
+    /* Force table to not be like tables anymore */
+    .no-more-tables table, 
+    .no-more-tables thead, 
+    .no-more-tables tbody, 
+    .no-more-tables th, 
+    .no-more-tables td, 
+    .no-more-tables tr { 
+            display: block; 
+    }
+
+    .no-more-tables tr:nth-child(even) {
+        margin-top: 20px;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .no-more-tables thead tr { 
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+    }
+
+    .no-more-tables tr { border: 1px solid #ccc; }
+
+    .no-more-tables table tr td { 
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee; 
+            position: relative;
+            padding-left: 50%; 
+            white-space: normal;
+            text-align:left;
+    }
+
+    .no-more-tables td:before { 
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 6px;
+            left: 6px;
+            width: 45%; 
+            padding-right: 10px; 
+            white-space: nowrap;
+            text-align:left;
+            font-weight: bold;
+    }
+
+    /*
+    Label the data
+    */
+    .no-more-tables td:before { content: attr(data-title); }
+}
+
+[data-formset-form] input, [data-formset-form] select {
+  margin-left: 3px;
+}
+
+#gauge-div svg { height: 300px; }
+
+#gauge-div svg, #gage svg {
+    height: 300px;
+}
+
+.program-filter {
+    font-size: 16px;
+    padding: 4px 25px 3px 5px;
+    margin: 2px 5px 0 0;
+    float: left;
+}
+
+.program-edit-button-container {
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.hierarchy-arrow-up:hover {
+  color: green;
+}
+
+.hierarchy-arrow-down:hover {
+  color: red;
+}
+
+a.btn-sm {
+    color: #666666;
+}
+
+/* Table filters with btn-link dropdown */
+table tr th .btn-group > .btn-link {
+    padding: 0;
+    font-weight: bold;
+}
+
+ul.tagit li:not(:first-child) ::-webkit-input-placeholder {opacity: 0;}
+ul.tagit li:not(:first-child) ::-moz-placeholder {opacity: 0;}
+ul.tagit li:not(:first-child) ::-ms-input-placeholder {opacity: 0;}
+ul.tagit li:not(:first-child) ::placeholder {opacity: 0;}
+
+.progress {
+    height: 23px;
+}
+
+.btn-dv {
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.program-details-list {
+    list-style-type: none;
+    padding: 0 0 0 0;
+}
+
+@media (min-width: 1000px) {
+    #newProgramModal .modal-body {
+        height: 150px;
+    }
+}
+
+.view-switch-label {
+    font-size: 24px;
+    text-align: right;
+}
+
+.action-icon {
+    cursor: pointer;
+}
+
+.program-details-panel hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.program-details-panel .tagit {
+    margin: 0 0 0 0;
+}
+
+.program-list-name-filter {
+    width: 100%;
+}
+
+.program-list-filters-row {
+    margin-bottom: 20px;
+}
+
+.program-action-icon {
+    margin-right: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+.defaultsrr {
+  padding-left: 22px;
+  margin-right: -23px;
+}
+
+.defaultsrr-field {
+  margin-right: 2px;
+}
+
+.data-origin-form {
+}
+
+.data-origin-select {
+  width: 50%;
+}
+
+#id_schedule_hour {
+  width: 100px;
+}
+

@@ -1,0 +1,110 @@
+{% load static %}
+{% load staticfiles %}
+{% load misc %}
+{% load i18n %}
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">RingLead <span style="font-size: 50%">{% app_version %}</span></a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      {% if user.is_authenticated %}
+      <ul class="nav navbar-nav navbar-right ringlead-nav">
+        <li>
+            <a href="{% url 'program_list' %}">
+                <i class="fa fa-2x fa-bars"></i>
+                <span class="visible-xs-inline">{% trans 'Program' %} List</span>
+            </a>
+        </li>
+        <!-- <li>
+            <a href="{% url 'program_dash' %}" class="disabled">
+                <i class="fa fa-2x fa-dashboard disabled"></i>
+                <span class="visible-xs-inline">Program Dashboard</span>
+            </a>
+        </li> -->
+        <li>
+            <a href="{% url 'reports' %}">
+                <i class="fa fa-2x fa-bar-chart"></i>
+                <span class="visible-xs-inline">Reports</span>
+            </a>
+        </li>
+        <!-- <li><a href="#"><i class="fa fa-2x fa-bell"></i><span class="badge badge-notify">3</span></a></li> -->
+        <li is="notification-bar" class="dropdown" style="display:none" inline-template>
+            <a class="dropdown-toggle" href="{% url 'notifications' %}" role="button" >
+                <i class="fa fa-2x fa-bell"></i>
+                <template v-if="unread > 0">
+                    <span class="badge badge-notify" id="unreads_count">{$ unread $}</span>
+                </template>
+            </a>
+            <ul class="dropdown-menu" id="notification_container">
+                <template v-if="unread == 0">
+                    <li>
+                        <a href="javascript:void(0)">Data operations are running smoothly and there are no Notifications at this time.</a>
+                    </li>
+                </template>
+                <template v-for="n in notifications" :index="$index">
+                    <li>
+                        <a href="#" @click="showNotificationByIndex($index)">{$ n.subject $}</a>
+                    </li>
+                </template>
+            </ul>
+            <!-- Modal -->
+            <div id="notification_modal" class="modal fade {$ modalClass $}" role="dialog" :style="{ display: modalDisplay }">
+              <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" @click="showModal = false">&times;</button>
+                    <h4 class="modal-title">{$ currentNotification.subject $}</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div style="word-wrap: break-word">{$$ currentNotification.text $$}</div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="showModal = false">Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+        </li>
+        <li>
+            <a href="{% url 'payment_plans' %}">
+                <span class="btn btn-sm btn-default">Upgrade</span>
+            </a>
+        </li>
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              {{ user.first_name }} {{ user.last_name }} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              {% if user.is_admin %}
+              <li><a href="/admin/">RingLead Superadmin</a></li>
+              {% endif %}
+              <!-- <li><a href="#">User Management</a></li> -->
+              <li><a href="{% url 'accounts:connections' %}">Manage connections</a></li>
+              <!-- <li><a href="#">Billing & Payments</a></li> -->
+              <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+            </ul>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="nav navbar-nav navbar-right">
+          <!-- If anonymous -->
+          <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
+          <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>

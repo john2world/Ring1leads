@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Continue Setup" %}{% endblock %}
+
+{% block layout %}
+    {% block content %}
+
+    <div id="loginwrap">
+      <div class="container">
+        <div class="row" align="center">
+              {% include 'includes/messages.html' %}
+              <br>
+              <div class="col-md-6 col-md-offset-3 well" style="height:350px">
+                  <div align="center">
+                      <h2>Connections</h2>
+                      <p>Connect your CRM and marketing databases</p>
+                      <br>
+                      <!-- BEGIN Salesforce Connection -->
+                      {% if salesforce_accounts %}
+                          {% for account in salesforce_accounts %}
+                              {% if account.active %}
+                              <button type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#SalesforceSettingsModal">Salesforce is Connected <i class="fa fa-inverse fa-check-circle"></i></button>
+                              {% else %}
+                              <button type="button" class="btn btn-lg btn-warning btn-block" data-toggle="modal" data-target="#SalesforceTypeSelectModal">Reconnect Salesforce <i class="fa fa-inverse fa-cloud"></i></button>
+                              {% endif %}
+                          {% endfor %}
+                      {% else %}
+                      <button type="button" class="btn btn-lg btn-warning btn-block" data-toggle="modal" data-target="#SalesforceTypeSelectModal">Connect Salesforce <i class="fa fa-inverse fa-cloud"></i></button>
+                      {% endif %}
+                      <!-- END Salesforce Connection -->
+                      <a href="#" class="btn btn-lg btn-warning btn-block" disabled>Connect Marketo <i class="fa fa-inverse fa-cloud"></i></a>
+                      <a href="#" class="btn btn-lg btn-warning btn-block" disabled>Connect Pardot <i class="fa fa-inverse fa-cloud"></i></a>
+                  </div>
+              </div>
+        </div>
+        <div class="row">
+            <div align="center" class="col-md-6 col-md-offset-3">
+                {% if salesforce_accounts %}
+                    <a href="{% url 'program_list' %}" class="btn btn-lg btn-warning">Get Started Optimizing Your Data!</a>
+                {% endif %}
+            </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+    <!-- Salesforce Production Vs. Sandbox Selection Modal -->
+    <div class="modal fade" id="SalesforceTypeSelectModal" tabindex="-1" role="dialog" aria-labelledby="SalesforceTypeSelectModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="SalesforceTypeSelectModalLabel">Select Salesforce Type</h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{% url 'salesforce_sandbox_auth_request' %}" class="btn btn-lg btn-warning btn-block">Connect a Sandbox Account</a>
+                </div>
+                <div class="col-md-6">
+                  <a href="{% url 'salesforce_auth_request' %}" class="btn btn-lg btn-warning btn-block">Connect a Production Account</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salesforce Settings Modal -->
+    <div class="modal fade" id="SalesforceSettingsModal" tabindex="-1" role="dialog" aria-labelledby="SalesforceSettingsModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Salesforce Connection Settings</h4>
+          </div>
+          <div class="modal-body">
+            {% if salesforce_accounts %}
+                {% for account in salesforce_accounts %}
+                    {% if account.active %}
+                        <table class="table well">
+                            <tbody>
+                                <tr>
+                                    <td>Salesforce Instance URL</td>
+                                    <td>{{ account.instance_url }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Salesforce Org Id</td>
+                                    <td>{{ account.salesforce_organization_id }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Salesforce User Id</td>
+                                    <td>{{ account.salesforce_user_id }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% else %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+            <a href="{% url 'salesforce_auth_request' %}" class="btn btn-lg btn-warning btn-block">Connect Salesforce</a>
+            {% endif %}
+            <div class="modal-footer">
+                <a href="{% url 'salesforce:delete_salesforce' %}" type="button" class="btn btn-danger">Delete Connection</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}
+{% endblock %}
+
+{% comment %}
+**registration/registration_complete.html**
+
+Used after successful completion of the registration form. This
+template has no context variables of its own, and should simply inform
+the user that an email containing account-activation information has
+been sent.
+{% endcomment %}

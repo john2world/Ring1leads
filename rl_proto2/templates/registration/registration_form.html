@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load static %}
+{% block head_css %}
+    <link rel="stylesheet" href="{% static 'int-tel-input/css/intlTelInput.css' %}">
+{% endblock %}
+{% block title %}{% trans "Sign Up" %}{% endblock %}
+{% block layout %}
+    {% block content %}
+
+    <div id="loginwrap">
+      <div class="container" >
+        <div class="row">
+            <br>
+            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 well">
+              <div align="center">
+                <h1>Sign Up</h1>
+                <p>Already have an account? <a href="{% url 'accounts:login' %}">Log In</a></p>
+              </div>
+                <form class="form-horizontal" method="post" action="">
+                    <fieldset>
+                        {% csrf_token %}
+
+                        <!-- First Name input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.first_name.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.first_name.errors.as_text }}</label>
+                                      {% render_field form.first_name class+="form-control" id+="inputError" placeholder="Re-enter your password" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.first_name class+="form-control" placeholder="First name" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <!-- Last Name input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.last_name.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.last_name.errors.as_text }}</label>
+                                      {% render_field form.last_name class+="form-control" id+="inputError" placeholder="Re-enter your password" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.last_name class+="form-control" placeholder="Last name" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <!-- Mobile Phone input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.mobile_number.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.mobile_number.errors.as_text }}</label>
+                                      {% render_field form.mobile_number class+="form-control" id+="inputError" placeholder="" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.mobile_number class+="form-control" placeholder="Mobile number" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.email.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.email.errors.as_text }}</label>
+                                      {% render_field form.email class+="form-control" id+="inputError" placeholder="Enter your email address" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.email class+="form-control" placeholder="Email address" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <!-- Password 1 input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.password1.errors %}
+                                  <div class="has-error">
+                                      <label class="control-label" for="inputError">{{ form.password1.errors.as_text }}</label>
+                                      {% render_field form.password1 class+="form-control" id+="inputError" placeholder="Create a password" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.password1 class+="form-control" placeholder="Create a password" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <!-- Password 2 input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.password2.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.password2.errors.as_text }}</label>
+                                      {% render_field form.password2 class+="form-control" id+="inputError" placeholder="Re-enter your password" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.password2 class+="form-control" placeholder="Re-enter your password" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                        <br>
+                        <div class="form-group">
+                          <div class="col-md-12" align="center">
+                            <button type="submit" class="btn btn-success btn-lg large-cta">Get started!</button>
+                            <br>
+                            <br>
+                            <sub>By creating an account you agree to <a target="_blank" href="#">our terms</a>.</sub>
+                          </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="how_it_works" tabindex="-1" role="dialog" aria-labelledby="how_it_works" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"><i class="fa fa-question-circle"></i> What is Data Sidekick?</h4>
+          </div>
+          <div class="modal-body">
+              <p><b>Data Sidekick is a web application that makes your CRM and marketing automation data better</b> without the hassle of clunky tools.  Simply connect with your CRM, marketing and/or contact management software and we will do all of the hard work for you.</p>
+              <p>You can rest easy knowing that non-standard, incomplete, and duplicate company or contact records will be cleaned & updated before you run that report, start that sales campaign, or make that crucial business decision.  Here's what it does:</p>
+
+              <h3 class="text-success"><strong>Name Formatting</strong></h3>
+              <p>Transform names from crazy-case to proper case. Send out automated emails without embarrassment.</p>
+              <div align="center">
+                  <table class="table">
+                      <tr>
+                          <th>Before</th>
+                          <th>After</th>
+                      </tr>
+                      <tr>
+                          <td class="text-danger">JAMES OLSEN  <i class="fa fa-times-circle"></i><br>
+                              james olsen <i class="fa fa-times-circle"></i><br>
+                              <br>
+                              the daily planet <i class="fa fa-times-circle"></i><br>
+                              THE DAILY PLANET <i class="fa fa-times-circle"></i><br>
+                          </td>
+                          <td class="text-success">
+                              James Olsen <i class="fa fa-check-circle"></i><br>
+                              <br>
+                              <br>
+                              The Daily Planet <i class="fa fa-check-circle"></i>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+              <h3 class="text-success"><strong>State & Country Formatting</strong></h3>
+              <p>You can't segment data by geography if you have non-standard state and country values, right?  Don't worry, we've got it covered.</p>
+              <div align="center">
+                  <table class="table">
+                      <tr>
+                          <th>Before</th>
+                          <th>After</th>
+                      </tr>
+                      <tr>
+                          <td class="text-danger">NEW YORK  <i class="fa fa-times-circle"></i><br>
+                              ny <i class="fa fa-times-circle"></i><br>
+                              <br>
+                              UNITED STATES <i class="fa fa-times-circle"></i><br>
+                              usa <i class="fa fa-times-circle"></i><br>
+                          </td>
+                          <td class="text-success">
+                              NY <i class="fa fa-check-circle"></i><br>
+                              <br>
+                              <br>
+                              USA <i class="fa fa-check-circle"></i>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+              <h3 class="text-success"><strong>Information Append</strong></h3>
+              <p>Complete company & contact data allows for complete reporting & analysis, proper segmentation, lead routing based on specific attributes, and much more.</p>
+              <div align="center">
+                  <table class="table">
+                      <tr>
+                          <th></th>
+                          <th>Before</th>
+                          <th>After</th>
+                      </tr>
+                      <tr>
+                          <td>Name</td>
+                          <td>Joe Johnson</td>
+                          <td class="text-success">Joe Johnson</td>
+                      </tr>
+                      <tr>
+                          <td>Job Title</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">Co-Founder <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Phone</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">(555) 233-3873 <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Email</td>
+                          <td>joe.johnson@datasidekick.com</td>
+                          <td class="text-success">joe.johnson@datasidekick.com </td>
+                      </tr>
+                      <tr>
+                          <td>Address</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">435 Fairview Ave, Suite 200 <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>City</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">Huntington <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>State</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">NY <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Postal Code</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">11743 <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Country</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">USA <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Industry</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">Technology <i class="fa fa-check-circle"></i></td>
+                      </tr>
+                      <tr>
+                          <td>Number of Employees</td>
+                          <td class="text-danger"><i class="fa fa-question-circle"></i></td>
+                          <td class="text-success">30 <i class="fa fa-check-circle"></i></td>
+                      </tr>
+
+                  </table>
+              </div>
+              <h3 class="text-success"><strong>Email Verification</strong></h3>
+              <p>Send more efficient email campaigns and cut down on wasted sales outreach by deleting or archiving disposable, dysfunctional and role (support@ or admin@) email addresses.</p>
+              <div align="center">
+                  <p><font size="5">joe.johnson@datasidekick.com <span class="label label-success">Verified <i class="fa fa-check"></i></span></font></p>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    {% endblock %}
+{% endblock %}
+
+{% block foot_js %}
+    <script type="text/javascript" src="{% static 'int-tel-input/js/intlTelInput.min.js' %}"></script>
+    <script>
+    $(function() {
+        var telInput = $('input[name="mobile_number"]'),
+            elParentDiv = telInput.closest('.form-group');
+        telInput.intlTelInput({utilsScript: "{% static 'int-tel-input/js/util.js' %}"});
+
+        // on blur: validate
+        telInput.blur(function() {
+          if ($.trim(telInput.val())) {
+            if (telInput.intlTelInput("isValidNumber")) {
+              elParentDiv.removeClass('has-error').addClass('has-success');
+            } else {
+              elParentDiv.removeClass('has-success').addClass('has-error');
+            }
+          }
+        });
+
+        // on keydown: reset
+        telInput.keydown(function() {
+          elParentDiv.removeClass('has-success').removeClass('has-error');
+        });
+
+        $("form").submit(function() {
+          telInput.val(telInput.intlTelInput("getNumber"));
+        });
+    });
+    </script>
+{% endblock %}
+
+
+
+{% comment %}
+**registration/registration_form.html**
+Used to show the form users will fill out to register. By default, has
+the following context:
+
+``form``
+    The registration form. This will be an instance of some subclass
+    of ``django.forms.Form``; consult `Django's forms documentation
+    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
+    information on how to display this in a template.
+{% endcomment %}

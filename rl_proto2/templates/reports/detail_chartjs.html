@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+
+
+
+
+    <!--Div that will hold the pie chart-->
+    <div class="col-md-10 col-md-offset-1" align="center">
+      <h3>Quality Score of {{ report.batch_program.name }} over time</h3>
+      <canvas id="myLineChart" width="1000px" height="400px"></canvas>
+
+    </div>
+
+    <script>
+
+        var data = {
+            labels: [
+                {% for i in report.get_all_quality_scores %}
+                    "{{ i.created }}"
+                {% endfor %}
+            ],
+            datasets: [
+                {
+                    label: "My First dataset",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: [
+                        {% for i in report.get_all_quality_scores %}
+                            {{ i.score }},
+                        {% endfor %}
+                    ]
+                },
+            ]
+        };
+
+        var ctx = $("#myLineChart").get(0).getContext("2d");
+        var myLineChart = new Chart(ctx).Line(data);
+
+    </script>
+
+{% endblock %}

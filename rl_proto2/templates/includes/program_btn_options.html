@@ -1,0 +1,79 @@
+{% load i18n %}
+<ul class="dropdown-menu">
+    <li>
+        <a href="/program/details/{$ item.id $}/">
+            <i class="fa fa-eye program-action-icon"></i>View details
+        </a>
+    </li>
+
+  <li v-show="showEdit(item) && item.source_name != 'FileSource'">
+      <a href="{% url 'batch_select' %}?pk={$ item.id $}">
+          <i class="fa fa-pencil program-action-icon"></i>Edit
+      </a>
+  </li>
+  <li v-show="showEdit(item)">
+      <a href="{% url 'report_snapshot' %}?pk={$ item.id $}">
+          <i class="fa fa-bar-chart program-action-icon"></i>View reports
+      </a>
+  </li>
+  <li v-show="showEdit(item)">
+      <a href="#" @click.stop.prevent="processProgramAction('/program/' + item.id + '/analyse/')">
+          <i class="fa fa-play-circle program-action-icon"></i>Analyse
+      </a>
+  </li>
+  <li v-show="showEdit(item)">
+      <a href="#" @click.stop.prevent="processProgramAction('/program/' + item.id + '/optimize/')">
+          <i class="fa fa-play-circle program-action-icon"></i>Optimize
+      </a>
+  </li>
+
+  <li v-show="showCancel(item)">
+      <a href="#" @click.stop.prevent="processProgramAction('/program/' + item.id + '/cancel/')">
+          <i class="fa fa-times-circle program-action-icon"></i>Cancel
+      </a>
+  </li>
+
+  <template v-if="showRestart(item)">
+    <li>
+        <a href="{% url 'program_action' %}?action=retry&pk={$ item.id $}">
+            <i class="fa fa-play-circle program-action-icon"></i>
+            {$ item.dateCreated ? 'Restart' : 'Start this {% trans "program" %}' $}
+        </a>
+    </li>
+  </template>
+
+  <template v-if="item.pre_backup_url">
+    <li>
+        <a v-bind:href="item.pre_backup_url">
+            <i class="fa fa-download program-action-icon"></i>Download backup
+        </a>
+    </li>
+  </template>
+
+  <template v-if="item.post_run_url">
+    <li>
+        <a v-bind:href="item.post_run_url">
+            <i class="fa fa-download program-action-icon"></i>Download {% trans 'program' %} results
+        </a>
+    </li>
+  </template>
+
+  <template v-if="showArchive(item)">
+    <li role="separator" class="divider"></li>
+    <li>
+        <a href="#" @click.stop.prevent="processProgramAction('/program/' + item.id + '/archive/')" class="archive-program">
+            <i class="fa fa-archive program-action-icon"></i>Archive
+        </a>
+    </li>
+  </template>
+
+  <template v-if="item.status == 'ARCH'">
+    <li role="separator" class="divider"></li>
+    <li>
+        <a href="#" @click.stop.prevent="processProgramAction('/program/' + item.id + '/reactivate/')" class="archive-program">
+            <i class="fa fa-archive program-action-icon"></i>Reactivate
+        </a>
+    </li>
+  </template>
+
+</ul>

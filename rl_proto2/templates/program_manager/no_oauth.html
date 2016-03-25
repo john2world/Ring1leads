@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block layout %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="row">
+  <div class="col-md-12" align="center">
+    <h5>It looks like you haven't added a connection to a data source yet, {{ user.first_name }}.
+      Let's fix that!</h5>
+    <a href="{% url 'accounts:connections' %}" class="btn btn-lg btn-warning">Add a connection</a>
+  </div>
+</div>
+{% endblock %}

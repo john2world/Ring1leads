@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+{% block title %}{% trans "Log in" %}{% endblock %}
+{% block layout %}
+    {% block content %}
+
+    <div id="loginwrap">
+      <div class="container">
+        <div class="row">
+          <br>
+          <br>
+          <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 well">
+              <div align="center">
+                <h1>Log In</h1>
+                 <p>Not yet registered? <a href="{% url 'accounts:register' %}">Sign Up Now!</a></p>
+              </div>
+              <form class="form-horizontal"  method="POST" >{% csrf_token %}
+                  <fieldset>
+                    {% bootstrap_messages %}
+                    <!-- Email input -->
+                      <div class="form-group" align="center">
+                        <div>
+                            {% if form.username.errors %}
+                                <div class=" has-error">
+                                    <label class="control-label" for="inputError">{{ form.username.errors.as_text }}</label>
+                                    {% render_field form.username class+="form-control" id+="inputError" placeholder="Enter your email address" %}
+                                </div>
+                            {% else %}
+                                {% render_field form.username class+="form-control" placeholder="Enter your email or username" %}
+                            {% endif %}
+                        </div>
+                      </div>
+
+                      <!-- Password input -->
+                        <div class="form-group" align="center">
+                          <div>
+                              {% if form.password.errors %}
+                                  <div class=" has-error">
+                                      <label class="control-label" for="inputError">{{ form.password.errors.as_text }}</label>
+                                      {% render_field form.password class+="form-control" id+="inputError" placeholder="Enter your password" %}
+                                  </div>
+                              {% else %}
+                                  {% render_field form.password class+="form-control" placeholder="Enter your password" %}
+                              {% endif %}
+                          </div>
+                        </div>
+
+                      <div class="form-group">
+                        <div align="center">
+                          <input type="submit" class="btn btn-success btn-lg large-cta" value="Log in" />
+                          <input type="hidden" name="next" value="{{ next }}" />
+                        </div>
+                      </div>
+                  </fieldset>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}
+{% endblock %}
+
+
+{% comment %}
+**registration/registration_form.html**
+Used to show the form users will fill out to register. By default, has
+the following context:
+
+``form``
+    The registration form. This will be an instance of some subclass
+    of ``django.forms.Form``; consult `Django's forms documentation
+    <http://docs.djangoproject.com/en/dev/topics/forms/>`_ for
+    information on how to display this in a template.
+{% endcomment %}
